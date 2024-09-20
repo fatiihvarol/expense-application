@@ -1,6 +1,6 @@
 import React from 'react';
 import Navbar from '../../components/Navbar';
-import { USERROLE } from '../../config/Constants';
+import { JWTROLE, USERROLE } from '../../config/Constants';
 import ProtectedRoute from '../../components/ProtectedRoute';
 const EmployeeDashboard = () => {
 
@@ -12,7 +12,7 @@ const EmployeeDashboard = () => {
 };
 
 export default () => (
-  <ProtectedRoute allowedRoles={['Employee']}>
+  <ProtectedRoute allowedRoles={[USERROLE[0]]}>
       <EmployeeDashboard />
   </ProtectedRoute>
 );

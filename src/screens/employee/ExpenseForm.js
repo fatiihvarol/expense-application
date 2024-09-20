@@ -198,7 +198,7 @@ import ProtectedRoute from "../../components/ProtectedRoute";
   };
 
   export default () => (
-    <ProtectedRoute allowedRoles={['Employee']}>
+    <ProtectedRoute allowedRoles={[USERROLE[0]]}>
         <ExpenseForm />
     </ProtectedRoute>
 );

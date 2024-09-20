@@ -5,11 +5,13 @@ import '../../styles/ExpenseList.css'; // CSS dosyasını içe aktar
 import Navbar from '../../components/Navbar';
 import { USERROLE } from '../../config/Constants';
 import ProtectedRoute from '../../components/ProtectedRoute';
+
 const ExpenseList = () => {
     const [expenses, setExpenses] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState('');
     const navigate = useNavigate();
+
     useEffect(() => {
         const getExpenses = async () => {
             try {
@@ -17,8 +19,8 @@ const ExpenseList = () => {
                 if (response.isSuccess) {
                     setExpenses(response.result);
                 } else {
-                    alert(response  );
-                    navigate('/login')
+                    alert(response);
+                    navigate('/login');
                 }
             } catch (err) {
                 setError(err.message);
@@ -30,8 +32,13 @@ const ExpenseList = () => {
         getExpenses();
     }, []);
 
-    const handleEdit = (id) => {
-        navigate(`/EditExpense/${id}`); 
+    // Harcamalar sadece "Pending" veya "Rejected" statüsünde ise düzenlenebilir
+    const handleEdit = (id, expenseStatus) => {
+        if (expenseStatus === 'Pending' || expenseStatus === 'Rejected') {
+            navigate(`/EditExpense/${id}`);
+        } else {
+            alert('Only Pending or Rejected expenses can be edited.');
+        }
     };
 
     if (loading) return <p>Loading...</p>;
@@ -40,41 +47,42 @@ const ExpenseList = () => {
     return (
         <div>
             <Navbar userRole={USERROLE[0]} />
-        
-        <div className="expense-list">
-            <h2>My Expenses</h2>
-            {expenses.length === 0 ? (
-                <p>No expenses found.</p>
-            ) : (
-                <ul>
-                    {expenses.map((expense) => (
-                        <li key={expense.id} className={`expense-item ${expense.expenseStatus.toLowerCase()}`}>
-                            <p className="expense-header" onClick={() => handleEdit(expense.id)}>
-                                Total Amount: {expense.totalAmount} {expense.currency}
-                            </p>
-                            <p>Status: {expense.expenseStatus}</p>
-                            <ul>
-                                {expense.expenses.map((detail, index) => (
-                                    <li key={index}>
-                                        <p>Amount: {detail.amount}</p>
-                                        <p>Description: {detail.description}</p>
-                                        <p>Location: {detail.location}</p>
-                                        <p>Category: {detail.category}</p>
-                                        <p>Receipt Number: {detail.receiptNumber}</p>
-                                    </li>
-                                ))}
-                            </ul>
-                        </li>
-                    ))}
-                </ul>
-            )}
-        </div>
+            <div className="expense-list">
+                <h2>My Expenses</h2>
+                {expenses.length === 0 ? (
+                    <p>No expenses found.</p>
+                ) : (
+                    <ul>
+                        {expenses.map((expense) => (
+                            <li key={expense.id} className={`expense-item ${expense.expenseStatus.toLowerCase()}`}>
+                                {/* Sadece ExpenseForm'a ait özellikler listeleniyor */}
+                                <p
+                                    className={`expense-header ${
+                                        expense.expenseStatus === 'Pending' || expense.expenseStatus === 'Rejected'
+                                            ? 'editable'
+                                            : 'non-editable'
+                                    }`}
+                                    onClick={() => handleEdit(expense.id, expense.expenseStatus)}
+                                >
+                                    <strong>Total Amount:</strong> {expense.totalAmount} {expense.currency}
+                                </p>
+                                <p>
+                                    <strong>Status:</strong> {expense.expenseStatus}
+                                </p>
+                                <p>
+                                    <strong>Number of Expenses:</strong> {expense.expenses.length}
+                                </p>
+                            </li>
+                        ))}
+                    </ul>
+                )}
+            </div>
         </div>
     );
 };
 
 export default () => (
-    <ProtectedRoute allowedRoles={['Employee']}>
+    <ProtectedRoute allowedRoles={[USERROLE[0]]}>
         <ExpenseList />
     </ProtectedRoute>
 );

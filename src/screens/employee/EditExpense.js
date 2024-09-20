@@ -204,7 +204,7 @@ const EditExpense = () => {
 };
 
 export default () => (
-    <ProtectedRoute allowedRoles={['Employee']}>
+    <ProtectedRoute allowedRoles={[USERROLE[0]]}>
         <EditExpense />
     </ProtectedRoute>
 );
