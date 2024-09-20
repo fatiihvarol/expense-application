@@ -4,6 +4,9 @@ import EmployeeDashboard from "./screens/employee/EmployeeDashboard";
 import ManagerDashboard from "./screens/manager/ManagerDashboard";
 import AdminDashboard from "./screens/admin/AdminDashboard";
 import AccountantDashboard from "./screens/accountant/AccountantDashboard";
+import ExpenseList from "./screens/employee/ExpenseList";
+import ExpenseForm from "./screens/employee/ExpenseForm";
+import EditExpense from "./screens/employee/EditExpense";
   function App() {
     return (
       <div className="App">
@@ -14,6 +17,10 @@ import AccountantDashboard from "./screens/accountant/AccountantDashboard";
                 <Route path="/Manager" element={<ManagerDashboard />} />
                 <Route path="/Admin" element={<AdminDashboard/>} />
                 <Route path="/Accountant" element={ <AccountantDashboard/>} />
+                <Route path="/MyExpenses" element={ <ExpenseList/>} />
+                <Route path="/AddExpense" element={ <ExpenseForm/>} />
+                <Route path="/EditExpense/:id" element={<EditExpense />} />
+
                 
       </Routes>
       </div>

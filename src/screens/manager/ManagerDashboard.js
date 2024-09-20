@@ -1,11 +1,14 @@
 import React from 'react';
+import { USERROLE } from '../../config/Constants';
+import Navbar from '../../components/Navbar';
+
 const ManagerDashboard = () => {
     
     return (
         <div className="dashboard-container">
-            <h1>Welcome to the MANAGEr Dashboard</h1>
-            <p>This is the main page after login.</p>
-            <button >click</button>
+         <Navbar userRole = {USERROLE[1]}></Navbar>
+
+      
         </div>
     );
 };

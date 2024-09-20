@@ -1,12 +1,11 @@
 import React from 'react';
-import ExpenseForm from './ExpenseForm';
 import Navbar from '../../components/Navbar';
+import { USERROLE } from '../../config/Constants';
 const EmployeeDashboard = () => {
 
     return (
         <div>
-          <Navbar userRole = "Employee"></Navbar>
-          <ExpenseForm />
+          <Navbar userRole = {USERROLE[0]}></Navbar>
         </div>
       );
 };

@@ -1,0 +1,56 @@
+.expense-list {
+    padding: 20px;
+    background-color: #ffffff;
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+h2 {
+    font-size: 28px;
+    margin-bottom: 20px;
+    color: #333;
+}
+
+ul {
+    list-style-type: none;
+    padding: 0;
+}
+
+.expense-item {
+    margin-bottom: 15px;
+    padding: 15px;
+    border-radius: 8px;
+    transition: all 0.3s ease;
+    cursor: pointer; 
+}
+
+.expense-item:hover {
+    transform: scale(1.02);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+}
+
+.expense-item.approved {
+    background-color: #e0f7e0;
+    border-left: 5px solid green;
+}
+
+.expense-item.rejected {
+    background-color: #f7e0e0;
+    border-left: 5px solid red;
+}
+
+.expense-item.pending {
+    background-color: #fff4e0;
+    border-left: 5px solid orange;
+}
+
+.expense-header {
+    font-weight: bold;
+    font-size: 18px;
+}
+
+.error {
+    color: red;
+    font-weight: bold;
+    margin-top: 20px;
+}

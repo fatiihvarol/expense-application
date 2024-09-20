@@ -10,8 +10,8 @@ const Navbar = ({ userRole }) => {
       case 'Employee':
         return (
           <>
-            <li><a href="/my-expenses">My Expenses</a></li>
-            <li><a href="/add-expense">Add Expense</a></li>
+            <li><a href="/MyExpenses">My Expenses</a></li>
+            <li><a href="/AddExpense">Add Expense</a></li>
           </>
         );
       case 'Manager':
