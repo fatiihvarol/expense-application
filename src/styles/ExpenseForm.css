@@ -1,4 +1,4 @@
-/* Genel Form Stilleri */
+
 form {
     max-width: 800px;
     margin: 0 auto;
@@ -28,8 +28,7 @@ form {
     display: block;
     margin-bottom: 8px;
   }
-  
-  /* Input ve Select Elemanları */
+
   input, select {
     width: 100%;
     padding: 10px;
@@ -48,10 +47,11 @@ form {
   
   /* Her Harcama Satırının Stili */
   .expense-item {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    grid-gap: 20px;
-    margin-bottom: 20px;
+    border: 1px solid #ddd;
+    padding: 15px;
+    margin-bottom: 40px;
+    border-radius: 10px;
+    background-color: #f9f9f9;
   }
   
   .expense-item input {
