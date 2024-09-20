@@ -6,6 +6,7 @@
   import { useNavigate } from "react-router-dom"; 
   import { USERROLE } from "../../config/Constants";
   import Navbar from "../../components/Navbar";
+import ProtectedRoute from "../../components/ProtectedRoute";
 
 
   const ExpenseForm = () => {
@@ -196,4 +197,8 @@
     );
   };
 
-  export default ExpenseForm;
+  export default () => (
+    <ProtectedRoute allowedRoles={['Employee']}>
+        <ExpenseForm />
+    </ProtectedRoute>
+);

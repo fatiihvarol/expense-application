@@ -7,6 +7,7 @@ import AccountantDashboard from "./screens/accountant/AccountantDashboard";
 import ExpenseList from "./screens/employee/ExpenseList";
 import ExpenseForm from "./screens/employee/ExpenseForm";
 import EditExpense from "./screens/employee/EditExpense";
+import NotFound from "./screens/common/NotFound"
   function App() {
     return (
       <div className="App">
@@ -20,6 +21,8 @@ import EditExpense from "./screens/employee/EditExpense";
                 <Route path="/MyExpenses" element={ <ExpenseList/>} />
                 <Route path="/AddExpense" element={ <ExpenseForm/>} />
                 <Route path="/EditExpense/:id" element={<EditExpense />} />
+
+                <Route path="*" element={<NotFound />} />
 
                 
       </Routes>

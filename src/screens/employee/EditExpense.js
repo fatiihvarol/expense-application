@@ -5,6 +5,7 @@ import { BASEURL, USERROLE, CURRENCYOPTIONS } from "../../config/Constants";
 import Navbar from "../../components/Navbar";
 import "../../styles/EditExpense.css"; 
 import { updateExpense } from "../../services/ExpenseFormService";
+import ProtectedRoute from "../../components/ProtectedRoute";
 
 const EditExpense = () => {
     const { id } = useParams();
@@ -202,4 +203,8 @@ const EditExpense = () => {
     );
 };
 
-export default EditExpense;
+export default () => (
+    <ProtectedRoute allowedRoles={['Employee']}>
+        <EditExpense />
+    </ProtectedRoute>
+);

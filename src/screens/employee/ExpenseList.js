@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom'; // React Router kullanımı içi
 import '../../styles/ExpenseList.css'; // CSS dosyasını içe aktar
 import Navbar from '../../components/Navbar';
 import { USERROLE } from '../../config/Constants';
+import ProtectedRoute from '../../components/ProtectedRoute';
 const ExpenseList = () => {
     const [expenses, setExpenses] = useState([]);
     const [loading, setLoading] = useState(true);
@@ -72,4 +73,8 @@ const ExpenseList = () => {
     );
 };
 
-export default ExpenseList;
+export default () => (
+    <ProtectedRoute allowedRoles={['Employee']}>
+        <ExpenseList />
+    </ProtectedRoute>
+);
