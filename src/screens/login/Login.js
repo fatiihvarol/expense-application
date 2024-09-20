@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { login } from "../../services/AuthService"; // Adjust path as needed
 import { useNavigate } from "react-router-dom"; // Import useNavigate hook
-import "./Login.css";
+import "../../styles/Login.css";
 import { jwtDecode } from "jwt-decode"; // import dependency
 import { JWTROLE } from "../../config/Constants";
 
