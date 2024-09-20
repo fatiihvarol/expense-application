@@ -40,6 +40,18 @@ const EditExpense = () => {
     };
 
     const handleUpdate = async () => {
+        // Validate that all fields are filled
+        for (const expense of expenseData.expenses) {
+            if (!expense.description || !expense.location || !expense.category || !expense.receiptNumber) {
+                alert("All fields must be filled in for each expense.");
+                return;
+            }
+            if (expense.amount <= 0) {
+                alert("Amount must be greater than 0.");
+                return;
+            }
+        }
+
         try {
             const dataToUpdate = {
                 totalAmount: calculateTotalAmount(),
@@ -67,7 +79,7 @@ const EditExpense = () => {
             alert("Each expense amount cannot exceed 5000.");
             return;
         }
-        
+
         const updatedExpenses = [...expenseData.expenses];
         updatedExpenses[index].amount = parseFloat(value);
         setExpenseData({ ...expenseData, expenses: updatedExpenses });
@@ -79,6 +91,12 @@ const EditExpense = () => {
     };
 
     const removeExpense = (index) => {
+        // Prevent removing the last expense
+        if (expenseData.expenses.length <= 1) {
+            alert("At least one expense must remain.");
+            return;
+        }
+
         const updatedExpenses = expenseData.expenses.filter((_, i) => i !== index);
         setExpenseData({ ...expenseData, expenses: updatedExpenses });
     };
