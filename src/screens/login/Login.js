@@ -6,7 +6,7 @@ import { jwtDecode } from "jwt-decode"; // import dependency
 import { JWTROLE } from "../../config/Constants";
 
 const Login = () => {
-    localStorage.clear();
+  localStorage.clear();
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
@@ -25,32 +25,20 @@ const Login = () => {
       const data = await login(username, password);
 
       if (data.isSuccess) {
-
         localStorage.setItem("token", data.result.token);
         localStorage.setItem("refreshToken", data.result.refreshToken);
         localStorage.setItem("expiresAt", data.result.expiresAt);
-
+        
         const decodedToken = jwtDecode(data.result.token);
-        const role = decodedToken[JWTROLE]
-        switch (role) {
-            case "Employee":
-                navigate("/employee-dashboard");
-                break;
-            case "Manager":
-                navigate("/manager-dashboard");
-                break;
-            case "Admin":
-                navigate("/admin-dashboard");
-                break;
-            case "Accountant":
-                navigate("/accountant-dashboard");
-                break;
-            default:
-                break;
+
+        const role = decodedToken[JWTROLE];
+
+        if (role) {
+          navigate(`/${role}`);
         }
         console.log(role);
       } else {
-        alert("Email or Password incorrect");
+        alert("Invalid Credentials");
       }
     } catch (error) {
       setErrorMessage(error.message);
