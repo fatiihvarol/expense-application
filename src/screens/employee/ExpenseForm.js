@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import '../../styles/ExpenseForm.css'; 
 import { CURRENCYOPTIONS, EXPENSECATEGORY } from '../../config/Constants';
+import minusIcon from '../../assest/minus.png'; 
 
 const ExpenseForm = () => {
   const [currency, setCurrency] = useState(CURRENCYOPTIONS[0]);
@@ -16,14 +17,19 @@ const ExpenseForm = () => {
       updatedExpenses[index][field] = value;
     }
 
-    updatedExpenses[index].isValid = true; // Değişiklik sonrası alanı tekrar geçerli yap
-
+    updatedExpenses[index].isValid = true;
     setExpenses(updatedExpenses);
     setTotal(updatedExpenses.reduce((sum, expense) => sum + parseFloat(expense.amount || 0), 0));
   };
 
   const handleAddExpense = () => {
     setExpenses([...expenses, { description: '', amount: 0, location: '', category: '', receiptNumber: '', error: '', isValid: true }]);
+  };
+
+  const handleDeleteExpense = (index) => {
+    const updatedExpenses = expenses.filter((_, i) => i !== index); // İlgili index'i listeden kaldır
+    setExpenses(updatedExpenses);
+    setTotal(updatedExpenses.reduce((sum, expense) => sum + parseFloat(expense.amount || 0), 0)); // Toplamı yeniden hesapla
   };
 
   const validateForm = () => {
@@ -36,10 +42,14 @@ const ExpenseForm = () => {
         !expense.amount ||
         !expense.location.trim() ||
         !expense.category.trim() ||
-        !expense.receiptNumber.trim()
+        !expense.receiptNumber.trim() ||
+        parseFloat(expense.amount) > 5000 
       ) {
         updatedExpenses[index].isValid = false;
         isFormValid = false;
+        if (parseFloat(expense.amount) > 5000) {
+          alert(` Expense can not exeed 5000 ${currency}.`);
+        }
       } else {
         updatedExpenses[index].isValid = true;
       }
@@ -53,15 +63,13 @@ const ExpenseForm = () => {
     e.preventDefault();
 
     if (validateForm()) {
-      // Form geçerliyse submit et
       console.log({
         currency,
         expenses,
         total
       });
     } else {
-      // Form geçerli değilse hata mesajlarını göster
-      console.log('Formda eksik alanlar var.');
+      console.log('There is empty columns');
     }
   };
 
@@ -77,32 +85,28 @@ const ExpenseForm = () => {
 
       {/* Harcamaları ayıran alan */}
       {expenses.map((expense, index) => (
-        <div className="expense-item" key={index} style={{ border: !expense.isValid ? '2px solid red' : 'none' }}>
+        <div className={`expense-item ${!expense.isValid ? 'error' : ''}`} key={index}>
           <input
             type="text"
             placeholder="Description"
             value={expense.description}
             onChange={(e) => handleExpenseChange(index, 'description', e.target.value)}
-            style={{ borderColor: !expense.isValid && !expense.description.trim() ? 'red' : '' }}
           />
           <input
             type="number"
             placeholder="Amount"
             value={expense.amount}
             onChange={(e) => handleExpenseChange(index, 'amount', e.target.value)}
-            style={{ borderColor: !expense.isValid && !expense.amount ? 'red' : '' }}
           />
           <input
             type="text"
             placeholder="Location"
             value={expense.location}
             onChange={(e) => handleExpenseChange(index, 'location', e.target.value)}
-            style={{ borderColor: !expense.isValid && !expense.location.trim() ? 'red' : '' }}
           />
-         <select
+          <select
             value={expense.category}
             onChange={(e) => handleExpenseChange(index, 'category', e.target.value)}
-            style={{ borderColor: !expense.isValid && !expense.category.trim() ? 'red' : '' }}
           >
             <option value="">Select Category</option>
             {EXPENSECATEGORY.map((category, idx) => (
@@ -116,7 +120,14 @@ const ExpenseForm = () => {
             placeholder="Receipt Number"
             value={expense.receiptNumber}
             onChange={(e) => handleExpenseChange(index, 'receiptNumber', e.target.value)}
-            style={{ borderColor: !expense.isValid && !expense.receiptNumber.trim() ? 'red' : '' }}
+          />
+          
+          {/* Silme butonu */}
+          <img
+            src={minusIcon}
+            alt="Delete Expense"
+            className="delete-expense"
+            onClick={() => handleDeleteExpense(index)}
           />
         </div>
       ))}
