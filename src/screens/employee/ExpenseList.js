@@ -1,5 +1,5 @@
-import React, { useEffect, useReducer, useState } from "react";
-import { fetchMyExpenses, DeleteExpense } from "../../services/ExpenseFormService";
+import React, { useEffect, useState } from "react";
+import { fetchMyExpenses } from "../../services/ExpenseFormService";
 import { useNavigate } from "react-router-dom";
 import "../../styles/ExpenseList.css";
 import Navbar from "../../components/Navbar";
@@ -12,7 +12,6 @@ const ExpenseList = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const navigate = useNavigate();
-  const [reducerValue,forceUpdate] = useReducer(x=> x+1,0)
 
   useEffect(() => {
     const getExpenses = async () => {
@@ -32,25 +31,11 @@ const ExpenseList = () => {
     };
 
     getExpenses(); // Yalnızca bileşen ilk yüklendiğinde çağrılır
-  }, [reducerValue]); // Boş bağımlılık dizisi
+  }, []); // Boş bağımlılık dizisi
 
   const handleEdit = (id) => {
     navigate(`/EditExpense/${id}`);
   };
-
-  const handleDelete = async (id) => {
-    try {
-      const response = await DeleteExpense(id);
-      forceUpdate() 
-      console.log("burda")
-        alert('Expense Form Deleted Successfully');  
-          
-      
-    } catch (error) {
-      alert(error.message);
-    }
-  };
-  
 
   if (loading) return <p>Loading...</p>;
   if (error) return <p className="error">{error}</p>;
@@ -72,13 +57,14 @@ const ExpenseList = () => {
                 className={`expense-item ${expense.expenseStatus.toLowerCase()}`}
               >
                 <p>
-                  <strong>Employee ID :</strong> {expense.employeeId}
+                  <strong>Employee No:</strong> {expense.employeeId}
                 </p>
                 <p
                   className={`expense-header`}
                   onClick={() => handleEdit(expense.id)}
                 >
-                  <strong>Total Amount:</strong> {expense.totalAmount} {expense.currency}
+                  <strong>Total Amount:</strong> {expense.totalAmount}{" "}
+                  {expense.currency}
                 </p>
                 <p>
                   <strong>Status:</strong> {expense.expenseStatus}
@@ -86,9 +72,6 @@ const ExpenseList = () => {
                 <p>
                   <strong>Number of Expenses:</strong> {expense.expenses.length}
                 </p>
-                {(expense.expenseStatus === "Pending" || expense.expenseStatus === "Rejected") && (
-                  <button onClick={() => handleDelete(expense.id)} className="delete-button">Delete</button>
-                )}
               </li>
             ))}
           </ul>

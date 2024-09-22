@@ -1,10 +1,9 @@
 import React, { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import axios from "axios";
-import { BASEURL, USERROLE, CURRENCYOPTIONS, TOKENROLEPATH } from "../../config/Constants"; 
+import { USERROLE, CURRENCYOPTIONS, TOKENROLEPATH } from "../../config/Constants"; 
 import Navbar from "../../components/Navbar";
 import "../../styles/EditExpense.css"; 
-import { updateExpense , GetxpenseById } from "../../services/ExpenseFormService";
+import { updateExpense, GetxpenseById, DeleteExpense } from "../../services/ExpenseFormService";
 import ProtectedRoute from "../../components/ProtectedRoute";
 import { jwtDecode } from "jwt-decode";
 
@@ -18,7 +17,7 @@ const EditExpense = () => {
     useEffect(() => {
         const fetchExpense = async () => {
             try {
-                const response = await GetxpenseById(id)
+                const response = await GetxpenseById(id);
                 if (response.isSuccess) {
                     setExpenseData(response.result);
                 } else {
@@ -67,13 +66,23 @@ const EditExpense = () => {
                 }))
             };
 
-            const response = await updateExpense(id, dataToUpdate);
+             await updateExpense(id, dataToUpdate);
             alert("Expense updated successfully!");
             navigate("/MyExpenses");
         } catch (error) {
             alert("Error updating expense: " + (error.message || 'Unknown error'));
         }
     };
+
+    const handleDelete = () => {
+        try {
+            DeleteExpense(id);
+            alert("Expense Form Deleted Successfully");
+            navigate("/MyExpenses");
+        } catch (error) {
+            alert("Error deleting expense: " + (error.message || 'Unknown error'));
+        }
+    }
 
     const handleAmountChange = (index, value) => {
         if (value > 5000) {
@@ -109,11 +118,14 @@ const EditExpense = () => {
         return <div>{error}</div>;
     }
 
-    const isEditable = expenseData.expenseStatus === "Pending" || expenseData.expenseStatus === "Rejected";
+    const isEditable = expenseData && (expenseData.expenseStatus === "Pending" || expenseData.expenseStatus === "Rejected");
 
     return (
-        <div className="edit-expense-container">
+        <div>
             <Navbar userRole={jwtDecode(localStorage.getItem('token'))[TOKENROLEPATH]} />
+       
+        <div className="edit-expense-container">
+            
             <h2>Edit Expense</h2>
             {expenseData && (
                 <div>
@@ -141,9 +153,9 @@ const EditExpense = () => {
                         </select>
                     </div>
                     <div>
-                        <label>Status :</label>
+                        <label>Status:</label>
                         <input
-                         value={expenseData.expenseStatus}
+                            value={expenseData.expenseStatus}
                             type="text"
                             readOnly 
                         />
@@ -207,17 +219,19 @@ const EditExpense = () => {
                                 placeholder="Receipt Number"
                                 disabled={!isEditable}
                             />
-                            {isEditable &&<button onClick={() => removeExpense(index)} disabled={!isEditable}>Remove</button>}
+                            {isEditable && <button onClick={() => removeExpense(index)}>Remove</button>}
                         </div>
                     ))}
-                  {isEditable && (
+                    {isEditable && (
                         <div>
                             <button onClick={addExpense}>Add Expense</button>
-                            <button onClick={handleUpdate}>Update Expense</button>
+                            <button onClick={handleUpdate}>Update Expense Form</button>
+                            <button onClick={handleDelete}>Delete Expense Form</button>
                         </div>
                     )}
                 </div>
             )}
+        </div>
         </div>
     );
 };

@@ -1,14 +1,20 @@
 .expense-list {
-    padding: 20px;
-    background-color: #ffffff;
-    border-radius: 10px;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    padding: 30px;
+    background-color: #f9f9f9;
+    border-radius: 15px;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+    max-width: 900px;
+    margin: 40px auto;
+    transition: background-color 0.3s ease;
 }
 
 h2 {
-    font-size: 28px;
-    margin-bottom: 20px;
-    color: #333;
+    font-size: 32px;
+    margin-bottom: 25px;
+    color: #444;
+    text-align: center;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    letter-spacing: 1px;
 }
 
 ul {
@@ -17,67 +23,95 @@ ul {
 }
 
 .expense-item {
-
-    padding: 15px;
-    border-radius: 8px;
-    transition: all 0.3s ease;
-    cursor: pointer; /* Tıklanabilir hale getir */
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px;
+    margin-bottom: 15px;
+    border-radius: 10px;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    cursor: pointer;
+    background-color: #fff;
+    border-left: 6px solid transparent;
 }
 
 .expense-item:hover {
-    transform: scale(1.02);
-    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+    transform: scale(1.03);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
 }
 
 .expense-item.approved {
-    background-color: #e0f7e0;
-    border-left: 5px solid green;
+    background-color: #e7f9e7;
+    border-left-color: #28a745;
 }
 
 .expense-item.rejected {
-    background-color: #f7e0e0;
-    border-left: 5px solid red;
+    background-color: #f9e7e7;
+    border-left-color: #dc3545;
 }
 
 .expense-item.pending {
-    background-color: #fff4e0;
-    border-left: 5px solid orange;
+    background-color: #fff7e6;
+    border-left-color: #fd7e14;
 }
-.delete-button
-{
-    background-color: rgb(219, 23, 23);
+
+.expense-details {
+    flex-grow: 1;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
-.delete-button:hover
-{
-    background-color: rgb(255, 0, 0);
-}
+
 .expense-header {
     font-weight: bold;
-    font-size: 18px;
+    font-size: 20px;
+    color: #333;
+    margin-bottom: 5px;
+}
+
+.expense-info {
+    font-size: 16px;
+    color: #666;
+}
+
+.delete-button {
+    background-color: #ff4d4d;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    font-size: 14px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.3s ease;
+}
+
+.delete-button:hover {
+    background-color: #ff1a1a;
+    transform: scale(1.05);
 }
 
 .error {
-    color: red;
+    color: #e60000;
     font-weight: bold;
-    margin-top: 20px;
-}/*
-.pagination {
-    display: flex;
-    justify-content: center;
-    margin-top: 20px;
+    margin-top: 25px;
+    text-align: center;
+    font-size: 18px;
+    letter-spacing: 0.5px;
 }
 
-.pagination button {
-    margin: 0 10px;
-    padding: 5px 10px;
-    background-color: #007bff;
-    color: white;
-    border: none;
-    cursor: pointer;
-}
+/* Mobil uyumluluk */
+@media (max-width: 600px) {
+    .expense-item {
+        flex-direction: column;
+        align-items: flex-start;
+        padding: 15px;
+    }
 
-.pagination button:disabled {
-    background-color: grey;
-    cursor: not-allowed;
+    .expense-details {
+        margin-bottom: 15px;
+    }
+
+    .delete-button {
+        width: 100%;
+        margin-top: 10px;
+    }
 }
-*/
