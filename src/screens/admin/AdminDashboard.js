@@ -1,4 +1,6 @@
 import React from 'react';
+import ProtectedRoute from '../../components/ProtectedRoute';
+import { USERROLE } from '../../config/Constants';
 const AdminDashboard = () => {
     
     return (
@@ -10,4 +12,9 @@ const AdminDashboard = () => {
     );
 };
 
-export default AdminDashboard;
+
+export default () => (
+    <ProtectedRoute allowedRoles={[USERROLE[3]]}>
+        <AdminDashboard />
+    </ProtectedRoute>
+);
