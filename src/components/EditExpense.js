@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import { USERROLE, CURRENCYOPTIONS, TOKENROLEPATH } from "../../config/Constants"; 
-import Navbar from "../../components/Navbar";
-import "../../styles/EditExpense.css"; 
-import { updateExpense, GetxpenseById, DeleteExpense } from "../../services/ExpenseFormService";
-import ProtectedRoute from "../../components/ProtectedRoute";
+import { USERROLE, CURRENCYOPTIONS, TOKENROLEPATH } from "../config/Constants"; 
+import Navbar from "./Navbar";
+import "../styles/EditExpense.css"; 
+import { updateExpense, GetxpenseById, DeleteExpense } from "../services/ExpenseFormService";
+import ProtectedRoute from "./ProtectedRoute";
 import { jwtDecode } from "jwt-decode";
 
 const EditExpense = () => {

@@ -4,10 +4,10 @@ import EmployeeDashboard from "./screens/employee/EmployeeDashboard";
 import ManagerDashboard from "./screens/manager/ManagerDashboard";
 import AdminDashboard from "./screens/admin/AdminDashboard";
 import AccountantDashboard from "./screens/accountant/AccountantDashboard";
-import ExpenseList from "./screens/employee/ExpenseList";
 import ExpenseForm from "./screens/employee/ExpenseForm";
-import EditExpense from "./screens/employee/EditExpense";
 import NotFound from "./screens/common/NotFound"
+import ExpenseList from "./components/ExpenseList";
+import EditExpense from "./components/EditExpense";
   function App() {
     return (
       <div className="App">

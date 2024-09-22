@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from "react";
-import { fetchMyExpenses } from "../../services/ExpenseFormService";
+import { fetchExpensesByRole } from "../services/ExpenseFormService";
 import { useNavigate } from "react-router-dom";
-import "../../styles/ExpenseList.css";
-import Navbar from "../../components/Navbar";
-import { TOKENROLEPATH, USERROLE } from "../../config/Constants";
-import ProtectedRoute from "../../components/ProtectedRoute";
+import "../styles/ExpenseList.css";
+import Navbar from "./Navbar";
+import { TOKENROLEPATH, USERROLE } from "../config/Constants";
+import ProtectedRoute from "./ProtectedRoute";
 import { jwtDecode } from "jwt-decode";
 
 const ExpenseList = () => {
@@ -16,7 +16,7 @@ const ExpenseList = () => {
   useEffect(() => {
     const getExpenses = async () => {
       try {
-        const response = await fetchMyExpenses();
+        const response = await fetchExpensesByRole();
         if (response.isSuccess) {
           setExpenses(response.result);
         } else {

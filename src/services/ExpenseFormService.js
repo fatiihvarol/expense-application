@@ -1,5 +1,6 @@
 import axios from 'axios';
-import { BASEURL } from '../config/Constants'; 
+import { BASEURL, TOKENROLEPATH } from '../config/Constants'; 
+import { jwtDecode } from 'jwt-decode';
 
 const CREATE_EXPENSE_URL = `${BASEURL}/ExpenseForms/Create`; 
 const MY_EXPENSES_URL = `${BASEURL}/ExpenseForms/GetMyExpenseForms`; 
@@ -29,22 +30,40 @@ export const submitExpenses = async (data) => {
     }
 };
 
-export const fetchMyExpenses = async () => {
+export const fetchExpensesByRole = async () => {
     try {
-        // Local storage'dan token'ı al
-        const token = localStorage.getItem('token'); // Token'ı buradan alıyoruz
+   
+        const token = localStorage.getItem('token');
+        const role = jwtDecode(token)[TOKENROLEPATH]
+        let endpoint;
+    switch (role) {
+        case 'Employee':
+            endpoint = `${BASE_EXPENSE_URL}/GetMyExpenseForms`;
+            break;
+        case 'Manager':
+            endpoint = `${BASE_EXPENSE_URL}/ByManager`;
+            break;
+        case 'Accountant':
+            endpoint = `${BASE_EXPENSE_URL}/ByAccountant`;
+            break;
+        case 'Admin':
+            endpoint = `${BASE_EXPENSE_URL}/ByAdmin`;
+            break;
+        default:
+            throw new Error('Invalid role');
+    }
 
-        // MyExpenses isteğini yap
-        const response = await axios.get(MY_EXPENSES_URL, {
+
+        const response = await axios.get(endpoint, {
             headers: {
-                'Authorization': `Bearer ${token}` // Bearer token formatında ekle
+                'Authorization': `Bearer ${token}`,
             }
         });
-
-        return response.data; // Harcama listesi döner
-    } catch (error) {
+        return response.data;
+    } 
+    catch (error) {
         throw new Error(error.response ? error.response.data.message : 'Failed to fetch expenses');
-    }
+    }  
 };
 
 
