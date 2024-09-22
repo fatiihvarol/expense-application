@@ -17,8 +17,7 @@ const Navbar = ({ userRole }) => {
       case 'Manager':
         return (
           <>
-            <li><a href="/pending-approvals">Pending Approvals</a></li>
-            <li><a href="/reports">Reports</a></li>
+            <li><a href="/Manager">Pending Approvals</a></li>
           </>
         );
       case 'Accountant':
