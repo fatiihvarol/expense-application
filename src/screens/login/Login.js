@@ -1,12 +1,11 @@
 import React, { useState } from "react";
 import { login } from "../../services/AuthService"; // Adjust path as needed
-import { useNavigate } from "react-router-dom"; // Import useNavigate hook
+import { useNavigate } from "react-router-dom";
 import "../../styles/Login.css";
-import { jwtDecode } from "jwt-decode"; // import dependency
+import { jwtDecode } from "jwt-decode"; 
 import { TOKENROLEPATH } from "../../config/Constants";
 
 const Login = () => {
-  localStorage.clear();
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
@@ -30,15 +29,13 @@ const Login = () => {
         localStorage.setItem("expiresAt", data.result.expiresAt);
         
         const decodedToken = jwtDecode(data.result.token);
-
         const role = decodedToken[TOKENROLEPATH];
 
         if (role) {
           navigate(`/${role}`);
         }
-        console.log(role);
       } else {
-        alert("Invalid Credentials");
+        setErrorMessage("Invalid Credentials");
       }
     } catch (error) {
       setErrorMessage(error.message);
@@ -50,8 +47,8 @@ const Login = () => {
       <form className="login-form" onSubmit={handleSubmit}>
         <h2>Login</h2>
         {errorMessage && <p className="error-message">{errorMessage}</p>}
-        <label htmlFor="username">Username</label>
         <input
+        placeholder="Email"
           type="text"
           id="username"
           name="username"
@@ -59,8 +56,8 @@ const Login = () => {
           onChange={handleChange}
           required
         />
-        <label htmlFor="password">Password</label>
         <input
+        placeholder="Password"
           type="password"
           id="password"
           name="password"
@@ -68,7 +65,7 @@ const Login = () => {
           onChange={handleChange}
           required
         />
-        <button type="submit">Login</button>
+        <button  className="login-form-button" >Login</button>
       </form>
     </div>
   );

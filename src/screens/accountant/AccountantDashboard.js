@@ -1,11 +1,12 @@
 import React from 'react';
+import Navbar from '../../components/Navbar';
+import { TOKENROLEPATH } from '../../config/Constants';
+import { jwtDecode } from 'jwt-decode';
 const AccountantDashboard = () => {
     
     return (
         <div className="dashboard-container">
-            <h1>Welcome to the ACCOUNTATNT Dashboard</h1>
-            <p>This is the main page after login.</p>
-            <button >click</button>
+        <Navbar  userRole={jwtDecode(localStorage.getItem('token'))[TOKENROLEPATH]} />
         </div>
     );
 };

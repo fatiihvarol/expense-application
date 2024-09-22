@@ -3,7 +3,6 @@ import { BASEURL, TOKENROLEPATH } from '../config/Constants';
 import { jwtDecode } from 'jwt-decode';
 
 const CREATE_EXPENSE_URL = `${BASEURL}/ExpenseForms/Create`; 
-const MY_EXPENSES_URL = `${BASEURL}/ExpenseForms/GetMyExpenseForms`; 
 const GETEXPENSEBYID = `${BASEURL}/ExpenseForms`; 
 const DELETEEXPENSE = `${BASEURL}/ExpenseForms`; 
 
@@ -122,4 +121,60 @@ export const DeleteExpense = async (id) => {
     }
 };
 
+export const rejectExpense = async (id,rejectionDescription) => 
+{
+    try {
+        const token = localStorage.getItem('token');
+        const response = await axios.put(`${BASE_EXPENSE_URL}/Reject/${id}`, rejectionDescription,{
+            headers: {
+                'Authorization': `Bearer ${token}`,
+                'Content-Type': 'application/json'
+            }
+        });
+        return response.data;
+    } catch (error) {
+        throw new Error(error.response ? error.response.data.message : 'Failed to reject expense');
+    }
+}
+export const approveExpense = async(id) =>
+{
+    try {
+        const token = localStorage.getItem('token');
+        const response = await axios.put(
+            `${BASE_EXPENSE_URL}/Approve/${id}`, 
+            {}, // Eğer PUT isteğinde veri göndermiyorsanız boş obje verin
+            {
+                headers: {
+                    'Authorization': `Bearer ${token}`,
+                    'Content-Type': 'application/json'
+                }
+            }
+        );
+        
+        return response.data;
+    } catch (error) {
+        throw new Error(error.response ? error.response.data.message : 'Failed to approve expense');
+    }
+}
+
+export const payExpense = async(id) =>
+    {
+        try {
+            const token = localStorage.getItem('token');
+            const response = await axios.put(
+                `${BASE_EXPENSE_URL}/Pay/${id}`, 
+                {}, 
+                {
+                    headers: {
+                        'Authorization': `Bearer ${token}`,
+                        'Content-Type': 'application/json'
+                    }
+                }
+            );
+            
+            return response.data;
+        } catch (error) {
+            throw new Error(error.response ? error.response.data.message : 'Failed to pay expense');
+        }
+    }
 

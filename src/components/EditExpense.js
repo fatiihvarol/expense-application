@@ -3,9 +3,8 @@ import { useParams, useNavigate } from "react-router-dom";
 import { USERROLE, CURRENCYOPTIONS, TOKENROLEPATH } from "../config/Constants"; 
 import Navbar from "./Navbar";
 import "../styles/EditExpense.css"; 
-import { updateExpense, GetxpenseById, DeleteExpense } from "../services/ExpenseFormService";
-import ProtectedRoute from "./ProtectedRoute";
-import { jwtDecode } from "jwt-decode";
+import { updateExpense, GetxpenseById, DeleteExpense, rejectExpense,approveExpense, payExpense } from "../services/ExpenseFormService";
+import {jwtDecode} from "jwt-decode";
 
 const EditExpense = () => {
     const { id } = useParams();
@@ -13,8 +12,17 @@ const EditExpense = () => {
     const [expenseData, setExpenseData] = useState(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState("");
+    const [userRole, setUserRole] = useState("");
+    const [rejectionDescription, setRejectionDescription] = useState("");
+    const [showRejectionModal, setShowRejectionModal] = useState(false);
 
     useEffect(() => {
+        const token = localStorage.getItem('token');
+        if (token) {
+            const decodedToken = jwtDecode(token);
+            setUserRole(decodedToken[TOKENROLEPATH]); // Get user role from token
+        }
+
         const fetchExpense = async () => {
             try {
                 const response = await GetxpenseById(id);
@@ -66,23 +74,66 @@ const EditExpense = () => {
                 }))
             };
 
-             await updateExpense(id, dataToUpdate);
+            await updateExpense(id, dataToUpdate);
             alert("Expense updated successfully!");
-            navigate("/MyExpenses");
+            navigate("/expenses");
         } catch (error) {
             alert("Error updating expense: " + (error.message || 'Unknown error'));
         }
     };
 
-    const handleDelete = () => {
+    const handleDelete = async () => {
         try {
-            DeleteExpense(id);
+            await DeleteExpense(id);
             alert("Expense Form Deleted Successfully");
-            navigate("/MyExpenses");
+            navigate("/expenses");
         } catch (error) {
             alert("Error deleting expense: " + (error.message || 'Unknown error'));
         }
-    }
+    };
+
+    const handleApprove = async () => {
+        try {
+            await approveExpense(id);
+            alert("Expense Form Deleted Successfully");
+            navigate("/expenses");
+        } catch (error) {
+            alert("Error deleting expense: " + (error.message || 'Unknown error'));
+        }
+    };
+
+    const handleReject = async () => {
+        setShowRejectionModal(true); 
+    };
+    const handlePay = async () => {
+        try {
+           const response =await payExpense(id)
+           if (response.isSuccess) {
+            alert("Expense Form Paid")
+            navigate('/expenses')
+           }
+        } catch (error) {
+            alert(error.message)
+        }
+        payExpense(id)
+    };
+
+    const submitRejection = async () => {
+        if (!rejectionDescription) {
+            alert("Please provide a reason for rejection.");
+            return;
+        }
+
+        try {
+            await rejectExpense(id, rejectionDescription); // Call the rejection service
+            alert("Expense rejected successfully.");
+            navigate("/expenses");
+        } catch (error) {
+            alert("Error rejecting expense: " + (error.message || 'Unknown error'));
+        } finally {
+            setShowRejectionModal(false);  // Close the modal
+        }
+    };
 
     const handleAmountChange = (index, value) => {
         if (value > 5000) {
@@ -118,126 +169,156 @@ const EditExpense = () => {
         return <div>{error}</div>;
     }
 
-    const isEditable = expenseData && (expenseData.expenseStatus === "Pending" || expenseData.expenseStatus === "Rejected");
+    const isEditable = expenseData && (expenseData.expenseStatus === "Pending" || expenseData.expenseStatus === "Rejected") && userRole === USERROLE[0];
 
     return (
         <div>
-            <Navbar userRole={jwtDecode(localStorage.getItem('token'))[TOKENROLEPATH]} />
-       
-        <div className="edit-expense-container">
-            
-            <h2>Edit Expense</h2>
-            {expenseData && (
-                <div>
+            <Navbar userRole={userRole} />
+            <div className="edit-expense-container">
+                <h2>Edit Expense</h2>
+                {expenseData && (
                     <div>
-                        <label>Total Amount:</label>
-                        <input
-                            type="number"
-                            value={calculateTotalAmount()} 
-                            readOnly 
-                            disabled={!isEditable}
-                        />
-                    </div>
-                    <div>
-                        <label>Currency:</label>
-                        <select
-                            value={expenseData.currency}
-                            onChange={(e) => setExpenseData({ ...expenseData, currency: e.target.value })}
-                            disabled={!isEditable}
-                        >
-                            {CURRENCYOPTIONS.map((currency) => (
-                                <option key={currency} value={currency}>
-                                    {currency}
-                                </option>
-                            ))}
-                        </select>
-                    </div>
-                    <div>
-                        <label>Status:</label>
-                        <input
-                            value={expenseData.expenseStatus}
-                            type="text"
-                            readOnly 
-                        />
-                    </div>
-                    <h4>Expenses</h4>
-                    {expenseData.expenses.map((expense, index) => (
-                        <div key={index} className="expense-item">
-                            <label>Description:</label>
-                            <input
-                                type="text"
-                                value={expense.description}
-                                onChange={(e) => {
-                                    const updatedExpenses = [...expenseData.expenses];
-                                    updatedExpenses[index].description = e.target.value;
-                                    setExpenseData({ ...expenseData, expenses: updatedExpenses });
-                                }}
-                                placeholder="Description"
-                                disabled={!isEditable}
-                            />
-                            <label>Amount:</label>
+                        <div>
+                            <label>Total Amount:</label>
                             <input
                                 type="number"
-                                value={expense.amount}
-                                onChange={(e) => handleAmountChange(index, e.target.value)} 
-                                placeholder="Amount"
+                                value={calculateTotalAmount()} 
+                                readOnly 
                                 disabled={!isEditable}
                             />
-                            <label>Location:</label>
-                            <input
-                                type="text"
-                                value={expense.location}
-                                onChange={(e) => {
-                                    const updatedExpenses = [...expenseData.expenses];
-                                    updatedExpenses[index].location = e.target.value;
-                                    setExpenseData({ ...expenseData, expenses: updatedExpenses });
-                                }}
-                                placeholder="Location"
-                                disabled={!isEditable}
-                            />
-                            <label>Category:</label>
-                            <input
-                                type="text"
-                                value={expense.category}
-                                onChange={(e) => {
-                                    const updatedExpenses = [...expenseData.expenses];
-                                    updatedExpenses[index].category = e.target.value;
-                                    setExpenseData({ ...expenseData, expenses: updatedExpenses });
-                                }}
-                                placeholder="Category"
-                                disabled={!isEditable}
-                            />
-                            <label>Receipt Number:</label>
-                            <input
-                                type="text"
-                                value={expense.receiptNumber}
-                                onChange={(e) => {
-                                    const updatedExpenses = [...expenseData.expenses];
-                                    updatedExpenses[index].receiptNumber = e.target.value;
-                                    setExpenseData({ ...expenseData, expenses: updatedExpenses });
-                                }}
-                                placeholder="Receipt Number"
-                                disabled={!isEditable}
-                            />
-                            {isEditable && <button onClick={() => removeExpense(index)}>Remove</button>}
                         </div>
-                    ))}
-                    {isEditable && (
                         <div>
-                            <button onClick={addExpense}>Add Expense</button>
-                            <button onClick={handleUpdate}>Update Expense Form</button>
-                            <button onClick={handleDelete}>Delete Expense Form</button>
+                            <label>Currency:</label>
+                            <select
+                                value={expenseData.currency}
+                                onChange={(e) => setExpenseData({ ...expenseData, currency: e.target.value })}
+                                disabled={!isEditable}
+                            >
+                                {CURRENCYOPTIONS.map((currency) => (
+                                    <option key={currency} value={currency}>
+                                        {currency}
+                                    </option>
+                                ))}
+                            </select>
                         </div>
-                    )}
+                        <div>
+                            <label>Status:</label>
+                            <input
+                                value={expenseData.expenseStatus}
+                                type="text"
+                                readOnly 
+                            />
+                        </div>
+                        <h4>Expenses</h4>
+                        {expenseData.expenses.map((expense, index) => (
+                            <div key={index} className="expense-item">
+                                <label>Description:</label>
+                                <input
+                                    type="text"
+                                    value={expense.description}
+                                    onChange={(e) => {
+                                        const updatedExpenses = [...expenseData.expenses];
+                                        updatedExpenses[index].description = e.target.value;
+                                        setExpenseData({ ...expenseData, expenses: updatedExpenses });
+                                    }}
+                                    placeholder="Description"
+                                    disabled={!isEditable}
+                                />
+                                <label>Amount:</label>
+                                <input
+                                    type="number"
+                                    value={expense.amount}
+                                    onChange={(e) => handleAmountChange(index, e.target.value)} 
+                                    placeholder="Amount"
+                                    disabled={!isEditable}
+                                />
+                                <label>Location:</label>
+                                <input
+                                    type="text"
+                                    value={expense.location}
+                                    onChange={(e) => {
+                                        const updatedExpenses = [...expenseData.expenses];
+                                        updatedExpenses[index].location = e.target.value;
+                                        setExpenseData({ ...expenseData, expenses: updatedExpenses });
+                                    }}
+                                    placeholder="Location"
+                                    disabled={!isEditable}
+                                />
+                                <label>Category:</label>
+                                <input
+                                    type="text"
+                                    value={expense.category}
+                                    onChange={(e) => {
+                                        const updatedExpenses = [...expenseData.expenses];
+                                        updatedExpenses[index].category = e.target.value;
+                                        setExpenseData({ ...expenseData, expenses: updatedExpenses });
+                                    }}
+                                    placeholder="Category"
+                                    disabled={!isEditable}
+                                />
+                                <label>Receipt Number:</label>
+                                <input
+                                    type="text"
+                                    value={expense.receiptNumber}
+                                    onChange={(e) => {
+                                        const updatedExpenses = [...expenseData.expenses];
+                                        updatedExpenses[index].receiptNumber = e.target.value;
+                                        setExpenseData({ ...expenseData, expenses: updatedExpenses });
+                                    }}
+                                    placeholder="Receipt Number"
+                                    disabled={!isEditable}
+                                />
+                                {isEditable && userRole === "Employee" && (
+                                    <button onClick={() => removeExpense(index)}>Remove</button>
+                                )}
+                            </div>
+                        ))}
+                        {isEditable && userRole === "Employee" && (
+                            <div>
+                                <button onClick={addExpense}>Add Expense</button>
+                                <button onClick={handleUpdate}>Update Expense Form</button>
+                                <button onClick={handleDelete}>Delete Expense Form</button>
+                            </div>
+                        )}
+                        {userRole === "Manager" && (
+                            <div>
+                                <button onClick={handleApprove}>Approve Expense Form</button>
+                                <button onClick={handleReject}>Decline Expense Form</button>
+                            </div>
+                        )}
+                        {userRole === "Accountant" && (
+                            <div>
+                                <button onClick={handlePay}>Pay Expense Form</button>
+                               
+                            </div>
+                        )}
+                        {userRole === "Admin" && (
+                            <div>
+                                {/* Admin-specific actions */}
+                            </div>
+                        )}
+                    </div>
+                )}
+            </div>
+
+            {/* Rejection Modal */}
+            {showRejectionModal && (
+                <div className="modal">
+                    <div className="modal-content">
+                        <h3>Reject Expense Form</h3>
+                        <label>Reason for Rejection:</label>
+                        <textarea
+                            value={rejectionDescription}
+                            onChange={(e) => setRejectionDescription(e.target.value)}
+                            placeholder="Enter rejection reason"
+                        />
+                        <button onClick={submitRejection}>Submit</button>
+                        <button onClick={() => setShowRejectionModal(false)}>Cancel</button>
+                    </div>
                 </div>
             )}
-        </div>
         </div>
     );
 };
 
-export default () => (
-    <ProtectedRoute allowedRoles={[USERROLE[0]]}>
-        <EditExpense />
-    </ProtectedRoute>
-);
+export default EditExpense;

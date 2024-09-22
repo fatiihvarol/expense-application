@@ -105,7 +105,7 @@ import { jwtDecode } from "jwt-decode";
         try {
           const response = await submitExpenses(payload);
           alert("Expenses submitted successfully:", response);
-          navigate("/MyExpenses");
+          navigate("/expenses");
         } catch (error) {
           alert("Error submitting expenses:", error.message);
         }

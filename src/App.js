@@ -18,9 +18,9 @@ import EditExpense from "./components/EditExpense";
                 <Route path="/Manager" element={<ManagerDashboard />} />
                 <Route path="/Admin" element={<AdminDashboard/>} />
                 <Route path="/Accountant" element={ <AccountantDashboard/>} />
-                <Route path="/MyExpenses" element={ <ExpenseList/>} />
+                <Route path="/expenses" element={ <ExpenseList/>} />
                 <Route path="/AddExpense" element={ <ExpenseForm/>} />
-                <Route path="/EditExpense/:id" element={<EditExpense />} />
+                <Route path="/edit-expense/:id" element={<EditExpense />} />
 
                 <Route path="*" element={<NotFound />} />
 

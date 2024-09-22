@@ -4,25 +4,23 @@
     justify-content: center;
     align-items: center;
     height: 100vh;
-    
     background-image: url('../assest/login.jpg'); /* Arka plan resmi */
     background-size: cover; /* Görüntüyü tam ekrana yayar */
     background-position: center; /* Görüntüyü merkeze hizalar */
-
 }
 
 .login-form {
-    background: rgb(239, 235, 235);
-   
-    padding: 20px;
-    border-radius: 8px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    background: rgba(239, 235, 235, 0.9); /* Hafif şeffaf arka plan */
+    padding: 30px;
+    border-radius: 10px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
     width: 350px;
+    text-align: center;
 }
 
 .login-form h2 {
     margin-bottom: 20px;
-    font-size: 24px;
+    font-size: 26px;
     color: #333;
 }
 
@@ -30,27 +28,39 @@
     display: block;
     margin-bottom: 8px;
     font-weight: bold;
+    color: #555;
 }
 
 .login-form input {
-    width: 100%;
+    width: calc(100% - 20px);
     padding: 10px;
     margin-bottom: 15px;
-    border: 1px solid #ddd;
+    border: 1px solid #dddddd;
     border-radius: 4px;
+    transition: border-color 0.3s;
 }
 
-.login-form button {
+.login-form input:focus {
+    border-color: #007bff; /* Odaklandığında kenar rengi değişir */
+}
+
+.login-form-button {
     width: 100%;
     padding: 10px;
-    background-color: #007bff;
+    background-color: #3475ba;
     border: none;
     border-radius: 4px;
     color: white;
     font-size: 16px;
     cursor: pointer;
+    transition: background-color 0.3s;
 }
 
 .login-form button:hover {
     background-color: #0056b3;
+}
+
+.error-message {
+    color: red; /* Hata mesajı için kırmızı renk */
+    margin-bottom: 15px; /* Mesaj ve form elemanları arasında boşluk */
 }

@@ -10,21 +10,20 @@ const Navbar = ({ userRole }) => {
       case 'Employee':
         return (
           <>
-            <li><a href="/MyExpenses">My Expenses</a></li>
+            <li><a href="/expenses">My Expenses</a></li>
             <li><a href="/AddExpense">Add Expense</a></li>
           </>
         );
       case 'Manager':
         return (
           <>
-            <li><a href="/Manager">Pending Approvals</a></li>
+            <li><a href="/expenses">Pending Approvals</a></li>
           </>
         );
       case 'Accountant':
         return (
           <>
-            <li><a href="/financial-reports">Financial Reports</a></li>
-            <li><a href="/manage-accounts">Manage Accounts</a></li>
+            <li><a href="/expenses">Pending Payments</a></li>
           </>
         );
       case 'Admin':

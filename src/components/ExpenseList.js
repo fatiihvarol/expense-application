@@ -34,7 +34,7 @@ const ExpenseList = () => {
   }, []); // Boş bağımlılık dizisi
 
   const handleEdit = (id) => {
-    navigate(`/EditExpense/${id}`);
+    navigate(`/edit-expense/${id}`);
   };
 
   if (loading) return <p>Loading...</p>;
@@ -69,6 +69,11 @@ const ExpenseList = () => {
                 <p>
                   <strong>Status:</strong> {expense.expenseStatus}
                 </p>
+                {expense.rejectionDescription != null &&
+                  <p>
+                  <strong>Rejection Description:</strong> {expense.rejectionDescription}
+                </p>
+                }
                 <p>
                   <strong>Number of Expenses:</strong> {expense.expenses.length}
                 </p>
@@ -82,7 +87,7 @@ const ExpenseList = () => {
 };
 
 export default () => (
-  <ProtectedRoute allowedRoles={[USERROLE[0]]}>
+  <ProtectedRoute allowedRoles={[USERROLE[0],USERROLE[1],USERROLE[2],USERROLE[3]]}>
     <ExpenseList />
   </ProtectedRoute>
 );

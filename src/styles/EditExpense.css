@@ -1,4 +1,4 @@
-/* EditExpense.css */
+/* Genel düzenlemeler */
 .edit-expense-container {
     max-width: 800px;
     margin: 0 auto;
@@ -56,6 +56,7 @@ select:focus {
     box-shadow: 0 0 5px rgba(0, 170, 255, 0.5);
 }
 
+/* Harcama öğeleri */
 .expense-item {
     margin-bottom: 20px;
     padding: 15px;
@@ -70,13 +71,18 @@ select:focus {
 .expense-item label {
     margin-bottom: 8px;
     font-weight: 500;
-   
 }
+
 .expense-item input {
     width: calc(100% - 30px);
     margin: 5px 0;
 }
 
+.edit-expense-container input[type="number"] {
+    text-align: right;
+}
+
+/* Butonlar */
 button {
     background-color: #00aaff;
     color: #fff;
@@ -106,23 +112,34 @@ button:last-of-type:hover {
     background-color: #e60000;
 }
 
-.edit-expense-container div {
-    margin-bottom: 20px;
+/* Modal düzenlemeleri */
+.modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
-.edit-expense-container div label {
-    margin-bottom: 5px;
+.modal-content {
+    background: white;
+    padding: 20px;
+    border-radius: 5px;
+    max-width: 500px;
+    width: 100%;
 }
 
-button[disabled] {
-    background-color: #ddd;
-    cursor: not-allowed;
+.modal-content textarea {
+    width: 100%;
+    height: 100px;
+    margin-top: 10px;
 }
 
-.edit-expense-container input[type="number"] {
-    text-align: right;
-}
-
+/* Responsive düzenlemeler */
 @media (max-width: 768px) {
     .edit-expense-container {
         padding: 15px;
