@@ -3,7 +3,7 @@ import { login } from "../../services/AuthService"; // Adjust path as needed
 import { useNavigate } from "react-router-dom"; // Import useNavigate hook
 import "../../styles/Login.css";
 import { jwtDecode } from "jwt-decode"; // import dependency
-import { JWTROLE } from "../../config/Constants";
+import { TOKENROLEPATH } from "../../config/Constants";
 
 const Login = () => {
   localStorage.clear();
@@ -31,7 +31,7 @@ const Login = () => {
         
         const decodedToken = jwtDecode(data.result.token);
 
-        const role = decodedToken[JWTROLE];
+        const role = decodedToken[TOKENROLEPATH];
 
         if (role) {
           navigate(`/${role}`);

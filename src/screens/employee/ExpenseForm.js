@@ -1,12 +1,13 @@
   import React, { useState } from "react";
   import "../../styles/ExpenseForm.css";
-  import { CURRENCYOPTIONS, EXPENSECATEGORY } from "../../config/Constants";
+  import { CURRENCYOPTIONS, EXPENSECATEGORY, TOKENROLEPATH } from "../../config/Constants";
   import { submitExpenses } from "../../services/ExpenseFormService"; 
   import minusIcon from "../../assest/minus.png";
   import { useNavigate } from "react-router-dom"; 
   import { USERROLE } from "../../config/Constants";
   import Navbar from "../../components/Navbar";
 import ProtectedRoute from "../../components/ProtectedRoute";
+import { jwtDecode } from "jwt-decode";
 
 
   const ExpenseForm = () => {
@@ -115,7 +116,7 @@ import ProtectedRoute from "../../components/ProtectedRoute";
 
     return (
       <div>
-        <Navbar userRole={USERROLE[0]}></Navbar>
+        <Navbar  userRole={jwtDecode(localStorage.getItem('token'))[TOKENROLEPATH]} />
 
         <form onSubmit={handleSubmit}>
           <h2>Expense Form</h2>

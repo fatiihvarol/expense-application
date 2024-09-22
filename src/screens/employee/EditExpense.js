@@ -1,11 +1,12 @@
 import React, { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import axios from "axios";
-import { BASEURL, USERROLE, CURRENCYOPTIONS } from "../../config/Constants"; 
+import { BASEURL, USERROLE, CURRENCYOPTIONS, TOKENROLEPATH } from "../../config/Constants"; 
 import Navbar from "../../components/Navbar";
 import "../../styles/EditExpense.css"; 
 import { updateExpense , GetxpenseById } from "../../services/ExpenseFormService";
 import ProtectedRoute from "../../components/ProtectedRoute";
+import { jwtDecode } from "jwt-decode";
 
 const EditExpense = () => {
     const { id } = useParams();
@@ -112,7 +113,7 @@ const EditExpense = () => {
 
     return (
         <div className="edit-expense-container">
-            <Navbar userRole={USERROLE[0]} />
+            <Navbar userRole={jwtDecode(localStorage.getItem('token'))[TOKENROLEPATH]} />
             <h2>Edit Expense</h2>
             {expenseData && (
                 <div>

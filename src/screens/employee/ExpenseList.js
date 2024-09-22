@@ -3,8 +3,9 @@ import { fetchMyExpenses } from "../../services/ExpenseFormService"; // Servis d
 import { useNavigate } from "react-router-dom"; // React Router kullanımı için
 import "../../styles/ExpenseList.css"; // CSS dosyasını içe aktar
 import Navbar from "../../components/Navbar";
-import { USERROLE } from "../../config/Constants";
+import { TOKENROLEPATH, USERROLE } from "../../config/Constants";
 import ProtectedRoute from "../../components/ProtectedRoute";
+import { jwtDecode } from "jwt-decode";
 
 const ExpenseList = () => {
   const [expenses, setExpenses] = useState([]);
@@ -42,7 +43,7 @@ const ExpenseList = () => {
 
   return (
     <div>
-      <Navbar userRole={USERROLE[0]} />
+      <Navbar userRole={jwtDecode(localStorage.getItem('token'))[TOKENROLEPATH]} />
       <div className="expense-list">
         <h2>Expens Forms List</h2>
         {expenses.length === 0 ? (

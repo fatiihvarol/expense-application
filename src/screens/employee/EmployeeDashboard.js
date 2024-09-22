@@ -1,13 +1,14 @@
 import React from 'react';
 import Navbar from '../../components/Navbar';
-import { JWTROLE, USERROLE } from '../../config/Constants';
+import { TOKENROLEPATH, USERROLE } from '../../config/Constants';
 import ProtectedRoute from '../../components/ProtectedRoute';
 import '../../styles/EmployeeDashboard.css'; // CSS dosyası
+import { jwtDecode } from 'jwt-decode';
 
 const EmployeeDashboard = () => {
     return (
         <div className="dashboard-container">
-            <Navbar userRole={USERROLE[0]} />
+            <Navbar  userRole={jwtDecode(localStorage.getItem('token'))[TOKENROLEPATH]} />
             <div className="dashboard-content">
                 <div className="dashboard-cards">
                     <div className="card">
