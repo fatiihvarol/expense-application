@@ -4,7 +4,7 @@ import axios from "axios";
 import { BASEURL, USERROLE, CURRENCYOPTIONS } from "../../config/Constants"; 
 import Navbar from "../../components/Navbar";
 import "../../styles/EditExpense.css"; 
-import { updateExpense } from "../../services/ExpenseFormService";
+import { updateExpense , GetxpenseById } from "../../services/ExpenseFormService";
 import ProtectedRoute from "../../components/ProtectedRoute";
 
 const EditExpense = () => {
@@ -17,9 +17,9 @@ const EditExpense = () => {
     useEffect(() => {
         const fetchExpense = async () => {
             try {
-                const response = await axios.get(`${BASEURL}/ExpenseForms/${id}`);
-                if (response.data.isSuccess) {
-                    setExpenseData(response.data.result);
+                const response = await GetxpenseById(id)
+                if (response.isSuccess) {
+                    setExpenseData(response.result);
                 } else {
                     setError("Expense not found.");
                 }
@@ -41,7 +41,6 @@ const EditExpense = () => {
     };
 
     const handleUpdate = async () => {
-        // Validate that all fields are filled
         for (const expense of expenseData.expenses) {
             if (!expense.description || !expense.location || !expense.category || !expense.receiptNumber) {
                 alert("All fields must be filled in for each expense.");
@@ -92,7 +91,6 @@ const EditExpense = () => {
     };
 
     const removeExpense = (index) => {
-        // Prevent removing the last expense
         if (expenseData.expenses.length <= 1) {
             alert("At least one expense must remain.");
             return;
@@ -110,6 +108,8 @@ const EditExpense = () => {
         return <div>{error}</div>;
     }
 
+    const isEditable = expenseData.expenseStatus === "Pending" || expenseData.expenseStatus === "Rejected";
+
     return (
         <div className="edit-expense-container">
             <Navbar userRole={USERROLE[0]} />
@@ -120,8 +120,9 @@ const EditExpense = () => {
                         <label>Total Amount:</label>
                         <input
                             type="number"
-                            value={calculateTotalAmount()} // Display calculated total
-                            readOnly // Make this field read-only
+                            value={calculateTotalAmount()} 
+                            readOnly 
+                            disabled={!isEditable}
                         />
                     </div>
                     <div>
@@ -129,6 +130,7 @@ const EditExpense = () => {
                         <select
                             value={expenseData.currency}
                             onChange={(e) => setExpenseData({ ...expenseData, currency: e.target.value })}
+                            disabled={!isEditable}
                         >
                             {CURRENCYOPTIONS.map((currency) => (
                                 <option key={currency} value={currency}>
@@ -137,8 +139,15 @@ const EditExpense = () => {
                             ))}
                         </select>
                     </div>
-                    <p>Status: {expenseData.expenseStatus}</p>
-                    <h4>Expenses:</h4>
+                    <div>
+                        <label>Status :</label>
+                        <input
+                         value={expenseData.expenseStatus}
+                            type="text"
+                            readOnly 
+                        />
+                    </div>
+                    <h4>Expenses</h4>
                     {expenseData.expenses.map((expense, index) => (
                         <div key={index} className="expense-item">
                             <label>Description:</label>
@@ -151,13 +160,15 @@ const EditExpense = () => {
                                     setExpenseData({ ...expenseData, expenses: updatedExpenses });
                                 }}
                                 placeholder="Description"
+                                disabled={!isEditable}
                             />
                             <label>Amount:</label>
                             <input
                                 type="number"
                                 value={expense.amount}
-                                onChange={(e) => handleAmountChange(index, e.target.value)} // Use the new function for amount change
+                                onChange={(e) => handleAmountChange(index, e.target.value)} 
                                 placeholder="Amount"
+                                disabled={!isEditable}
                             />
                             <label>Location:</label>
                             <input
@@ -169,6 +180,7 @@ const EditExpense = () => {
                                     setExpenseData({ ...expenseData, expenses: updatedExpenses });
                                 }}
                                 placeholder="Location"
+                                disabled={!isEditable}
                             />
                             <label>Category:</label>
                             <input
@@ -180,6 +192,7 @@ const EditExpense = () => {
                                     setExpenseData({ ...expenseData, expenses: updatedExpenses });
                                 }}
                                 placeholder="Category"
+                                disabled={!isEditable}
                             />
                             <label>Receipt Number:</label>
                             <input
@@ -191,12 +204,17 @@ const EditExpense = () => {
                                     setExpenseData({ ...expenseData, expenses: updatedExpenses });
                                 }}
                                 placeholder="Receipt Number"
+                                disabled={!isEditable}
                             />
-                            <button onClick={() => removeExpense(index)}>Remove</button> {/* Remove button */}
+                            {isEditable &&<button onClick={() => removeExpense(index)} disabled={!isEditable}>Remove</button>}
                         </div>
                     ))}
-                    <button onClick={addExpense}>Add Expense</button> {/* Add button */}
-                    <button onClick={handleUpdate}>Update Expense</button>
+                  {isEditable && (
+                        <div>
+                            <button onClick={addExpense}>Add Expense</button>
+                            <button onClick={handleUpdate}>Update Expense</button>
+                        </div>
+                    )}
                 </div>
             )}
         </div>

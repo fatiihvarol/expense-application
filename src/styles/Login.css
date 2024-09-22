@@ -4,15 +4,20 @@
     justify-content: center;
     align-items: center;
     height: 100vh;
-    background-color: #f0f0f0;
+    
+    background-image: url('../assest/login.jpg'); /* Arka plan resmi */
+    background-size: cover; /* Görüntüyü tam ekrana yayar */
+    background-position: center; /* Görüntüyü merkeze hizalar */
+
 }
 
 .login-form {
-    background: white;
+    background: rgb(239, 235, 235);
+   
     padding: 20px;
     border-radius: 8px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-    width: 300px;
+    width: 350px;
 }
 
 .login-form h2 {

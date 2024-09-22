@@ -1,7 +1,7 @@
 import React from 'react';
 import { USERROLE } from '../../config/Constants';
-import Navbar from '../../components/Navbar';
 import ProtectedRoute from '../../components/ProtectedRoute'
+import Navbar from '../../components/Navbar';
 const ManagerDashboard = () => {
     
     return (
