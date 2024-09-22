@@ -4,6 +4,8 @@ import { BASEURL } from '../config/Constants';
 const CREATE_EXPENSE_URL = `${BASEURL}/ExpenseForms/Create`; 
 const MY_EXPENSES_URL = `${BASEURL}/ExpenseForms/GetMyExpenseForms`; 
 const GETEXPENSEBYID = `${BASEURL}/ExpenseForms`; 
+const DELETEEXPENSE = `${BASEURL}/ExpenseForms`; 
+
 export const submitExpenses = async (data) => {
     try {
       
@@ -85,4 +87,20 @@ export const GetxpenseById = async (id) => {
         throw new Error(error.response ? error.response.data.message : 'Failed to update expense');
     }
 };
+
+export const DeleteExpense = async (id) => {
+    try {
+        const token = localStorage.getItem('token');
+        const response = await axios.delete(`${DELETEEXPENSE}/${id}`, {
+            headers: {
+                'Authorization': `Bearer ${token}`,
+                'Content-Type': 'application/json'
+            }
+        });
+        return response.data;
+    } catch (error) {
+        throw new Error(error.response ? error.response.data.message : 'Failed to delete expense');
+    }
+};
+
 

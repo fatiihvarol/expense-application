@@ -43,7 +43,14 @@ ul {
     background-color: #fff4e0;
     border-left: 5px solid orange;
 }
-
+.delete-button
+{
+    background-color: rgb(219, 23, 23);
+}
+.delete-button:hover
+{
+    background-color: rgb(255, 0, 0);
+}
 .expense-header {
     font-weight: bold;
     font-size: 18px;
