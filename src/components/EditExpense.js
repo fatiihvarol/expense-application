@@ -28,18 +28,21 @@ const EditExpense = () => {
                 const response = await GetxpenseById(id);
                 if (response.isSuccess) {
                     setExpenseData(response.result);
+                } else if (response.errorMessage === "You don't have permission") {
+                    navigate("/404"); // Redirect to your 404 component
                 } else {
                     setError("Expense not found.");
                 }
             } catch (err) {
-                setError("Error fetching expense data.");
+                console.log(err)
+                navigate("/404");
             } finally {
                 setLoading(false);
             }
         };
-
+    
         fetchExpense();
-    }, [id]);
+    }, [id, navigate]);
 
     const calculateTotalAmount = () => {
         if (expenseData && expenseData.expenses) {

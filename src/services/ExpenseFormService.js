@@ -57,7 +57,7 @@ export const fetchExpensesByRole = async () => {
             headers: {
                 'Authorization': `Bearer ${token}`,
             }
-        });
+        }); 
         return response.data;
     } 
     catch (error) {
@@ -175,6 +175,26 @@ export const payExpense = async(id) =>
             return response.data;
         } catch (error) {
             throw new Error(error.response ? error.response.data.message : 'Failed to pay expense');
+        }
+    }
+
+    export const employeeInfo = async() =>
+    {
+        try {
+            const token = localStorage.getItem('token');
+            const response = await axios.get(
+                `${BASE_EXPENSE_URL}/GetEmployeeExpenseInfo`, 
+                {
+                    headers: {
+                        'Authorization': `Bearer ${token}`,
+                        'Content-Type': 'application/json'
+                    }
+                }
+            );
+            
+            return response.data;
+        } catch (error) {
+            throw new Error(error.response ? error.response.data.message : 'Failed to get info');
         }
     }
 
