@@ -29,8 +29,8 @@ const Login = () => {
         localStorage.setItem("expiresAt", data.result.expiresAt);
         
         const decodedToken = jwtDecode(data.result.token);
-        const role = decodedToken[TOKENROLEPATH];
-
+        const role = decodedToken[TOKENROLEPATH].toLowerCase();
+            
         if (role) {
           navigate(`/${role}`);
         }

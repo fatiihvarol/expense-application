@@ -1,35 +1,64 @@
+/* Genel navbar ayarları */
 .navbar {
-    background-color: #007bff;
-    padding: 10px 20px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
+  background-color: #0056b3;
+  padding: 15px 30px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  border-radius: 8px;
+}
+
+/* Navbar içerisindeki liste */
+.navbar ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  gap: 20px; /* Elemanlar arası boşluk */
+}
+
+/* Navbar linklerinin ayarları */
+.navbar a {
+  color: white;
+  text-decoration: none;
+  font-weight: bold;
+  font-size: 1rem;
+  transition: color 0.3s ease, transform 0.3s ease;
+}
+
+/* Hover durumu - interaktif görünüm */
+.navbar a:hover {
+  color: #ffdd57;
+  transform: scale(1.1); /* Hafif büyütme efekti */
+}
+
+/* Logout ikonunun ayarları */
+.logout-icon {
+  cursor: pointer;
+  width: 25px; /* İkon boyutu */
+  height: 25px;
+  transition: transform 0.3s ease, opacity 0.3s ease;
+}
+
+.logout-icon:hover {
+  transform: rotate(20deg); /* Döndürme efekti */
+  opacity: 0.8; /* Hafif şeffaflık */
+}
+
+/* Responsive tasarım */
+@media (max-width: 768px) {
+  .navbar {
+    flex-direction: column;
+    align-items: flex-start;
   }
   
   .navbar ul {
-    list-style: none;
-    margin: 0;
-    padding: 0;
-    display: flex;
+    flex-direction: column;
+    gap: 15px;
   }
-  
-  .navbar li {
-    margin-right: 20px;
-  }
-  
-  .navbar a {
-    color: white;
-    text-decoration: none;
-    font-weight: bold;
-  }
-  
-  .navbar a:hover {
-    text-decoration: underline;
-  }
-  
+
   .logout-icon {
-    cursor: pointer;
-    width: 20px; /* İkon boyutunu ayarlayın */
-    height: 20px; /* İkon boyutunu ayarlayın */
+    margin-top: 10px;
   }
-  
+}

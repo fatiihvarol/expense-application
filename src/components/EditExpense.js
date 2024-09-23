@@ -98,7 +98,7 @@ const EditExpense = () => {
     const handleApprove = async () => {
         try {
             await approveExpense(id);
-            alert("Expense Form Deleted Successfully");
+            alert("Expense Form Approved Successfully");
             navigate("/expenses");
         } catch (error) {
             alert("Error deleting expense: " + (error.message || 'Unknown error'));

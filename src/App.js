@@ -14,12 +14,12 @@ import EditExpense from "./components/EditExpense";
      <Routes>
                 <Route path="/" element = {<Login/>}/>
                 <Route path="/login" element={<Login />} />
-                <Route path="/Employee" element={<EmployeeDashboard />} />
-                <Route path="/Manager" element={<ManagerDashboard />} />
+                <Route path="/employee" element={<EmployeeDashboard />} />
+                <Route path="/manager" element={<ManagerDashboard />} />
                 <Route path="/Admin" element={<AdminDashboard/>} />
-                <Route path="/Accountant" element={ <AccountantDashboard/>} />
+                <Route path="/accountant" element={ <AccountantDashboard/>} />
                 <Route path="/expenses" element={ <ExpenseList/>} />
-                <Route path="/AddExpense" element={ <ExpenseForm/>} />
+                <Route path="/add-expense" element={ <ExpenseForm/>} />
                 <Route path="/edit-expense/:id" element={<EditExpense />} />
 
                 <Route path="*" element={<NotFound />} />

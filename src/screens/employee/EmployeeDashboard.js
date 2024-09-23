@@ -43,7 +43,7 @@ const EmployeeDashboard = () => {
     };
 
     return (
-        <div className="dashboard-container">
+        <div >
             <Navbar userRole={jwtDecode(localStorage.getItem('token'))[TOKENROLEPATH]} />
             <div className="dashboard-content">
                 <div className="dashboard-cards">
