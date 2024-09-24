@@ -11,6 +11,7 @@ import {
   approveExpense,
   payExpense,
 } from "../services/ExpenseFormService";
+import { fetchExpenseFormHistory } from "../services/ExpenseFormHistoryService";
 import { jwtDecode } from "jwt-decode";
 import axios from "axios";
 import minusIcon from "../assest/minus.png";
@@ -103,6 +104,7 @@ const EditExpense = () => {
         return;
       }
     }
+   
 
     try {
       const dataToUpdate = {
@@ -126,7 +128,10 @@ const EditExpense = () => {
       alert("Error updating expense: " + (error.message || "Unknown error"));
     }
   };
-
+  const handleHistory = async (id) =>
+    {
+        navigate(`/history/${id}`);
+    }
   const handleDelete = async () => {
     try {
       await DeleteExpense(id);
@@ -374,7 +379,10 @@ const EditExpense = () => {
                 <button onClick={handlePay}>Pay Expense Form</button>
               </div>
             )}
-            {userRole === "Admin" && <div>{/* Admin-specific actions */}</div>}
+            {userRole === "Admin" && <div>{/* Admin-specific actions */}
+            <button  onClick={() => handleHistory(id)} >See History</button>
+
+                </div>}
           </div>
         )}
         {showRejectionModal && (

@@ -8,6 +8,7 @@ import ExpenseForm from "./screens/employee/ExpenseForm";
 import NotFound from "./screens/common/NotFound"
 import ExpenseList from "./components/ExpenseList";
 import EditExpense from "./components/EditExpense";
+import ExpenseFormHistory from "./screens/admin/ExpenseFormHistory";
   function App() {
     return (
       <div className="App">
@@ -21,6 +22,7 @@ import EditExpense from "./components/EditExpense";
                 <Route path="/expenses" element={ <ExpenseList/>} />
                 <Route path="/add-expense" element={ <ExpenseForm/>} />
                 <Route path="/edit-expense/:id" element={<EditExpense />} />
+                <Route path="/history/:id" element = {<ExpenseFormHistory/>}/>
 
                 <Route path="*" element={<NotFound />} />
 
