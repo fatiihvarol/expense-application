@@ -9,6 +9,10 @@ import NotFound from "./screens/common/NotFound"
 import ExpenseList from "./components/ExpenseList";
 import EditExpense from "./components/EditExpense";
 import ExpenseFormHistory from "./screens/admin/ExpenseFormHistory";
+import PieChartReport from "./screens/admin/PieChartReport";
+import BarChartReport from "./screens/admin/BarChartReport";
+
+
   function App() {
     return (
       <div className="App">
@@ -23,6 +27,8 @@ import ExpenseFormHistory from "./screens/admin/ExpenseFormHistory";
                 <Route path="/add-expense" element={ <ExpenseForm/>} />
                 <Route path="/edit-expense/:id" element={<EditExpense />} />
                 <Route path="/history/:id" element = {<ExpenseFormHistory/>}/>
+                <Route path="/pie-chart" element = {<PieChartReport/>}/>
+                <Route path="/bar-chart" element = {<BarChartReport/>}/>
 
                 <Route path="*" element={<NotFound />} />
 

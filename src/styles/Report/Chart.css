@@ -1,0 +1,69 @@
+/* Tüm PieChart bileşenini ortalamak için kullanılan kapsayıcı */
+.chart-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    min-height: 100vh; /* PieChart'ı tam ekran ortalamak için */
+    background-color: #f5f5f5; /* Hafif bir arka plan rengi ekledik */
+  }
+  
+  /* Başlık kısmı için stil */
+  .title {
+    font-size: 24px;
+    font-weight: bold;
+    margin-bottom: 20px;
+    text-align: center;
+  }
+  
+  /* PieChart'ı kapsayan alanı ortalıyoruz */
+  .chart-wrapper {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    max-width: 800px; /* PieChart genişliğini sınırlıyoruz */
+    background-color: white;
+    padding: 20px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Hafif gölge efekti */
+    border-radius: 10px; /* Köşeleri yuvarlatıyoruz */
+    margin-bottom: 30px; /* Liste ile grafik arasında boşluk ekliyoruz */
+  }
+  
+  /* Harcama listesini biçimlendiriyoruz */
+  .expenses-list {
+    width: 100%;
+    max-width: 800px;
+    background-color: white;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  }
+  
+  /* Her harcama kalemi için stil */
+  .expense-item {
+    display: flex;
+    justify-content: space-between;
+    padding: 10px 0;
+    font-size: 18px;
+    border-bottom: 1px solid #ddd;
+  }
+  
+  /* Kategori adı ve harcama miktarını ayırıyoruz */
+  .category-name {
+    font-weight: bold;
+    color: #333;
+  }
+  
+  /* Harcama miktarını vurgulamak için stil */
+  .expense-value {
+    color: #d9534f; /* Kırmızı tonlu renk */
+    font-weight: bold;
+  }
+  
+  /* Son öğe için alt sınır kaldırıyoruz */
+  .expense-item:last-child {
+    border-bottom: none;
+  }
+  
