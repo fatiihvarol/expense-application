@@ -6,6 +6,7 @@ import '../../styles/EmployeeDashboard.css';
 import { employeeInfo } from '../../services/ExpenseFormService'; // import your service
 import { jwtDecode } from 'jwt-decode';
 import { useNavigate } from 'react-router-dom'; // Import useNavigate
+import { Box, CircularProgress } from '@mui/material';
 
 const EmployeeDashboard = () => {
     const [expenseData, setExpenseData] = useState(null);  // State to hold API data
@@ -35,7 +36,11 @@ const EmployeeDashboard = () => {
     }
 
     if (!expenseData) {
-        return <div>Loading...</div>;  // Show loading indicator while fetching data
+        return (
+            <Box className="centered">
+              <CircularProgress />
+            </Box>
+          );
     }
 
     const handleOnClick = (formId) => {

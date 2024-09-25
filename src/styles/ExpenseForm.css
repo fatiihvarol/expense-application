@@ -64,30 +64,11 @@ form {
     margin-left: 10px;
   }
   
-  .error-input {
-    border-color: red;
-  }
+
   
-  .invalid-expense {
-    border: 2px solid red;
-  }
+
   
-  /* Add Expense Butonu */
-  button[type="button"] {
-    display: inline-block;
-    padding: 10px 20px;
-    background-color: #28a745;
-    color: white;
-    font-size: 16px;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
-  }
-  
-  button[type="button"]:hover {
-    background-color: #218838;
-  }
+
   
   /* Submit Butonu */
   button[type="submit"] {
@@ -115,24 +96,5 @@ form {
     text-align: right;
     margin-top: 10px;
   }
-  
-  /* Responsive Düzen */
-  @media (max-width: 800px) {
-    form {
-      padding: 15px;
-    }
-  
-    input, select {
-      font-size: 14px;
-      padding: 8px;
-    }
-  
-    button[type="submit"] {
-      font-size: 16px;
-    }
-    .expense-item.error {
-        border: 2px solid red; /* Hatalı alanın etrafındaki kenar rengi */
-      }
-      
-  }
+ 
   

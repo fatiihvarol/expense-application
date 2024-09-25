@@ -3,10 +3,11 @@ import { PieChart } from "@mui/x-charts/PieChart";
 import { jwtDecode } from "jwt-decode";
 import Navbar from "../../components/Navbar";
 import { fetchPieChart } from "../../services/ReportService";
-import { TOKENROLEPATH } from "../../config/Constants";
+import { TOKENROLEPATH, USERROLE } from "../../config/Constants";
 import "../../styles/Report/Chart.css"; // CSS dosyasını dahil ediyoruz
+import ProtectedRoute from "../../components/ProtectedRoute";
 
-export default function PieChartReport() {
+const  PieChartReport =()=> {
   const [data, setData] = useState([]);
 
   // Veri çekme işlemi useEffect içinde
@@ -66,3 +67,10 @@ export default function PieChartReport() {
     </div>
   );
 }
+export default () => (
+  <ProtectedRoute
+    allowedRoles={[USERROLE[0], USERROLE[1], USERROLE[2], USERROLE[3]]}
+  >
+    <PieChartReport />
+  </ProtectedRoute>
+);

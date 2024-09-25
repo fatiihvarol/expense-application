@@ -84,7 +84,7 @@ select:focus {
     display: flex;
     justify-content: center;
     align-items: center;
-    z-index: 999; /* Modal'ı diğer içeriklerin üstüne çıkartır */
+    z-index: 999;
 }
 
 .modal-content {
@@ -93,7 +93,7 @@ select:focus {
     border-radius: 5px;
     max-width: 500px;
     width: 100%;
-    position: relative; /* İçerikleri düzenler */
+    position: relative;
 }
 
 .modal-content textarea {
@@ -124,13 +124,10 @@ select:focus {
     color: #333;
 }
 
-
 .expense-item input {
     width: calc(100% - 30px);
     margin: 5px 0;
 }
-
-
 
 /* Butonlar */
 button {
@@ -146,7 +143,7 @@ button {
 }
 
 button:hover {
-    background-color: #0088cc;
+    background-color: #0088cc; /* Varsayılan buton hover rengi */
 }
 
 button:disabled {
@@ -154,12 +151,37 @@ button:disabled {
     cursor: not-allowed;
 }
 
-button:last-of-type {
+/* Özel buton renkleri */
+.reject-button {
     background-color: #ff5252;
 }
 
-button:last-of-type:hover {
-    background-color: #e60000;
+.reject-button:hover {
+    background-color: #ff2d2d; /* Reddetme butonu hover rengi */
+}
+
+.cancel-button {
+    background-color: #a99e9e;
+}
+
+.cancel-button:hover {
+    background-color: #8c8c8c; /* İptal butonu hover rengi */
+}
+
+.save-button {
+    background-color: #28a745;
+}
+
+.save-button:hover {
+    background-color: #218838; /* Kaydet butonu hover rengi */
+}
+
+.update-button {
+    background-color: #ff9800;
+}
+
+.update-button:hover {
+    background-color: #e68a00; /* Güncelle butonu hover rengi */
 }
 
 /* Modal düzenlemeleri */
@@ -212,5 +234,9 @@ button:last-of-type:hover {
     button {
         width: 100%;
         margin-bottom: 10px;
+    }
+    .add-button
+    {
+        background-color: #218838;
     }
 }

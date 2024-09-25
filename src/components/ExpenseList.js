@@ -6,11 +6,15 @@ import Navbar from "./Navbar";
 import { TOKENROLEPATH, USERROLE } from "../config/Constants";
 import ProtectedRoute from "./ProtectedRoute";
 import { jwtDecode } from "jwt-decode";
+import CircularProgress from '@mui/material/CircularProgress';
+import Box from '@mui/material/Box';
 
 const ExpenseList = () => {
   const [expenses, setExpenses] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
+  const [filterStatus, setFilterStatus] = useState("All");
+  const [filterCurrency, setFilterCurrency] = useState("All");
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -37,8 +41,26 @@ const ExpenseList = () => {
     navigate(`/edit-expense/${id}`);
   };
 
-  if (loading) return <p>Loading...</p>;
+  if (loading) {
+    return (
+      <Box className="centered">
+        <CircularProgress />
+      </Box>
+    );
+  }
+  
+  
   if (error) return <p className="error">{error}</p>;
+
+  const filteredExpenses = expenses.filter((expense) => {
+    const matchesStatus =
+      filterStatus === "All" || expense.expenseStatus === filterStatus;
+
+    const matchesCurrency =
+      filterCurrency === "All" || expense.currency === filterCurrency;
+
+    return matchesStatus && matchesCurrency;
+  });
 
   return (
     <div>
@@ -47,11 +69,38 @@ const ExpenseList = () => {
       />
       <div className="expense-list">
         <h2>Expense Forms List</h2>
-        {expenses.length === 0 ? (
+
+        <div className="filter-section">
+          <select
+            value={filterStatus}
+            onChange={(e) => setFilterStatus(e.target.value)}
+          >
+            <option value="All">All Statuses</option>
+            <option value="Paid">Paid</option>
+            <option value="Pending">Pending</option>
+            <option value="Rejected">Rejected</option>
+            <option value="Approved">Approved</option>
+          </select>
+
+          <select
+            value={filterCurrency}
+            onChange={(e) => setFilterCurrency(e.target.value)}
+          >
+            <option value="All">All Currencies</option>
+            <option value="TRY">TRY</option>
+            <option value="USD">USD</option>
+            <option value="USD">EUR</option>
+            <option value="USD">PKR</option>
+            <option value="USD">INR</option>
+
+          </select>
+        </div>
+
+        {filteredExpenses.length === 0 ? (
           <p>No expenses found.</p>
         ) : (
           <ul>
-            {expenses.map((expense) => (
+            {filteredExpenses.map((expense) => (
               <li
                 key={expense.id}
                 className={`expense-item ${expense.expenseStatus.toLowerCase()}`}
@@ -69,11 +118,6 @@ const ExpenseList = () => {
                 <p>
                   <strong>Status:</strong> {expense.expenseStatus}
                 </p>
-                {expense.rejectionDescription != null &&
-                  <p>
-                  <strong>Rejection Description:</strong> {expense.rejectionDescription}
-                </p>
-                }
                 <p>
                   <strong>Number of Expenses:</strong> {expense.expenses.length}
                 </p>
@@ -87,7 +131,9 @@ const ExpenseList = () => {
 };
 
 export default () => (
-  <ProtectedRoute allowedRoles={[USERROLE[0],USERROLE[1],USERROLE[2],USERROLE[3]]}>
+  <ProtectedRoute
+    allowedRoles={[USERROLE[0], USERROLE[1], USERROLE[2], USERROLE[3]]}
+  >
     <ExpenseList />
   </ProtectedRoute>
 );

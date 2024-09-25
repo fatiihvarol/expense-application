@@ -4,16 +4,21 @@ import { jwtDecode } from "jwt-decode";
 import { TOKENROLEPATH } from '../config/Constants';
 
 const ProtectedRoute = ({ allowedRoles, children }) => {
-    const token = localStorage.getItem('token');
-    const decodedToken = jwtDecode(token);
-
-    const userRole = decodedToken[TOKENROLEPATH];
-
-    if (!userRole || !allowedRoles.includes(userRole)) {
+    try {
+        const token = localStorage.getItem('token');
+        const decodedToken = jwtDecode(token);
+    
+        const userRole = decodedToken[TOKENROLEPATH];
+    
+        if (!userRole || !allowedRoles.includes(userRole)) {
+            
+        }
+    
+        return children;
+    } catch (error) {
         return <Navigate to="/404" replace />;
     }
-
-    return children;
+  
 };
 
 export default ProtectedRoute;

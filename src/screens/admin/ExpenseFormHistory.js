@@ -4,25 +4,29 @@ import { fetchExpenseFormHistory } from "../../services/ExpenseFormHistoryServic
 import '../../styles/ExpenseFormHistory.css';
 import Navbar from "../../components/Navbar";
 import { USERROLE } from "../../config/Constants";
+import CircularProgress from "@mui/material/CircularProgress"; // CircularProgress bileşenini ekleyin
+import ProtectedRoute from "../../components/ProtectedRoute";
 
 const ExpenseFormHistory = () => {
   const { id } = useParams();
   const [history, setHistory] = useState(null);
+  const [loading, setLoading] = useState(true); // Loading durumu
 
   useEffect(() => {
     const fetchData = async () => {
+      setLoading(true); // Veriyi çekmeden önce loading durumunu true yap
       try {
         const response = await fetchExpenseFormHistory(id);
         setHistory(response);
       } catch (error) {
         console.error("Failed to fetch expense form history:", error);
+      } finally {
+        setLoading(false); // Veriyi çektikten sonra loading durumunu false yap
       }
     };
 
     fetchData();
   }, [id]);
-
-
 
   // Tarih ve saat formatlayan fonksiyon
   const formatDateTime = (dateTime) => {
@@ -34,30 +38,36 @@ const ExpenseFormHistory = () => {
 
   return (
     <div>
-        <Navbar userRole={USERROLE[3]} />
-        <div className="history-page">
-      
-      <div className="history-container">
-        <h2 className="history-title">Expense Form History</h2>
-        {history ? (
-          history.result.map((item) => (
-            <div key={item.id} className={`history-item action-${item.action.toLowerCase()}`}>
-              <div className="history-content">
-                <p><strong>Action:</strong> <span>{item.action}</span></p>
-                <p><strong>Date:</strong> <span>{formatDateTime(item.date)}</span></p> 
-                <p><strong>User ID:</strong> <span>{item.madeBy}</span></p>
-                <p><strong>Full Name:</strong> <span>{item.fullName}</span></p>
+      <Navbar userRole={USERROLE[3]} />
+      <div className="history-page">
+        <div className="history-container">
+          <h2 className="history-title">Expense Form History</h2>
+          {loading ? ( // Eğer loading durumu true ise yükleme göstergesi göster
+            <CircularProgress />
+          ) : history ? (
+            history.result.map((item) => (
+              <div key={item.id} className={`history-item action-${item.action.toLowerCase()}`}>
+                <div className="history-content">
+                  <p><strong>Action:</strong> <span>{item.action}</span></p>
+                  <p><strong>Date:</strong> <span>{formatDateTime(item.date)}</span></p>
+                  <p><strong>User ID:</strong> <span>{item.madeBy}</span></p>
+                  <p><strong>Full Name:</strong> <span>{item.fullName}</span></p>
+                </div>
               </div>
-            </div>
-          ))
-        ) : (
-          <p className="loading">Loading...</p>
-        )}
+            ))
+          ) : (
+            <p className="loading">No history found.</p>
+          )}
+        </div>
       </div>
     </div>
-    </div>
-    
   );
 };
 
-export default ExpenseFormHistory;
+export default () => (
+  <ProtectedRoute
+    allowedRoles={[USERROLE[0], USERROLE[1], USERROLE[2], USERROLE[3]]}
+  >
+    <ExpenseFormHistory />
+  </ProtectedRoute>
+);

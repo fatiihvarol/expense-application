@@ -15,6 +15,8 @@ import { fetchExpenseFormHistory } from "../services/ExpenseFormHistoryService";
 import { jwtDecode } from "jwt-decode";
 import axios from "axios";
 import minusIcon from "../assest/minus.png";
+import ProtectedRoute from "./ProtectedRoute";
+import { Box, CircularProgress } from "@mui/material";
 const CATEGORYURL = "https://localhost:7295/api/ExpenseCategories";
 
 const EditExpense = () => {
@@ -227,7 +229,11 @@ const EditExpense = () => {
   };
 
   if (loading) {
-    return <div>Loading...</div>;
+    return (
+      <Box className="centered">
+        <CircularProgress />
+      </Box>
+    );
   }
 
   if (error) {
@@ -353,30 +359,30 @@ const EditExpense = () => {
             ))}
             {isEditable && (
               <div>
-                <button onClick={addExpense} className="btn btn-primary">
+                <button onClick={addExpense} className="save-button">
                   Add Expense
                 </button>
-                <button onClick={handleUpdate} className="btn btn-success">
+                <button onClick={handleUpdate} className="update-button">
                   Update Expense
                 </button>
-                <button onClick={handleDelete} className="btn btn-danger">
+                <button onClick={handleDelete} className="reject-button">
                   Delete Expense
                 </button>
               </div>
             )}
             {userRole === USERROLE[1] && (
               <div>
-                <button onClick={handleApprove} className="btn btn-success">
+                <button onClick={handleApprove} className="save-button">
                   Approve Expense
                 </button>
-                <button onClick={handleReject} className="btn btn-danger">
+                <button onClick={handleReject} className="reject-button">
                   Reject Expense
                 </button>
               </div>
             )}
             {userRole === "Accountant" && (
               <div>
-                <button onClick={handlePay}>Pay Expense Form</button>
+                <button className="save-button" onClick={handlePay}>Pay Expense Form</button>
               </div>
             )}
             {userRole === "Admin" && <div>{/* Admin-specific actions */}
@@ -400,12 +406,12 @@ const EditExpense = () => {
                 onChange={(e) => setRejectionDescription(e.target.value)}
                 placeholder="Reason for rejection"
               />
-              <button onClick={submitRejection} className="btn btn-danger">
+              <button onClick={submitRejection} className="save-button">
                 Submit Rejection
               </button>
               <button
                 onClick={() => setShowRejectionModal(false)}
-                className="btn btn-secondary"
+                className="reject-button"
               >
                 Cancel
               </button>
@@ -417,4 +423,10 @@ const EditExpense = () => {
   );
 };
 
-export default EditExpense;
+export default () => (
+  <ProtectedRoute
+    allowedRoles={[USERROLE[0], USERROLE[1], USERROLE[2], USERROLE[3]]}
+  >
+    <EditExpense />
+  </ProtectedRoute>
+);

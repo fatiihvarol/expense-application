@@ -3,11 +3,12 @@ import { BarChart } from "@mui/x-charts/BarChart";
 import { axisClasses } from "@mui/x-charts/ChartsAxis";
 import { fetchBarChart } from "../../services/ReportService"; // API function to fetch chart data
 import { jwtDecode } from "jwt-decode";
-import { TOKENROLEPATH } from "../../config/Constants";
+import { TOKENROLEPATH, USERROLE } from "../../config/Constants";
 import Navbar from "../../components/Navbar";
 import "../../styles/Report/Chart.css"; // Import the CSS for styling
+import ProtectedRoute from "../../components/ProtectedRoute";
 
-export default function BarChartReport() {
+const BarChartReport= ()=> {
   const [dataset, setDataset] = useState([]);
   const [currencies, setCurrencies] = useState([]);
 
@@ -90,3 +91,10 @@ export default function BarChartReport() {
     </div>
   );
 }
+export default () => (
+  <ProtectedRoute
+    allowedRoles={[USERROLE[0], USERROLE[1], USERROLE[2], USERROLE[3]]}
+  >
+    <BarChartReport />
+  </ProtectedRoute>
+);

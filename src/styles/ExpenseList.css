@@ -1,5 +1,5 @@
 .expense-list {
-    padding: 30px;
+    padding: 90px;
     background-color: #f9f9f9;
     border-radius: 15px;
     box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
@@ -67,51 +67,12 @@ ul {
     margin-bottom: 5px;
 }
 
-.expense-info {
-    font-size: 16px;
-    color: #666;
-}
+.centered {
+    display: flex;
+    justify-content: center;
+    align-items: center; 
+    height: 100vh;
+  }
+  
 
-.delete-button {
-    background-color: #ff4d4d;
-    color: white;
-    border: none;
-    padding: 10px 20px;
-    border-radius: 5px;
-    font-size: 14px;
-    font-weight: bold;
-    cursor: pointer;
-    transition: background-color 0.3s ease, transform 0.3s ease;
-}
 
-.delete-button:hover {
-    background-color: #ff1a1a;
-    transform: scale(1.05);
-}
-
-.error {
-    color: #e60000;
-    font-weight: bold;
-    margin-top: 25px;
-    text-align: center;
-    font-size: 18px;
-    letter-spacing: 0.5px;
-}
-
-/* Mobil uyumluluk */
-@media (max-width: 600px) {
-    .expense-item {
-        flex-direction: column;
-        align-items: flex-start;
-        padding: 15px;
-    }
-
-    .expense-details {
-        margin-bottom: 15px;
-    }
-
-    .delete-button {
-        width: 100%;
-        margin-top: 10px;
-    }
-}
