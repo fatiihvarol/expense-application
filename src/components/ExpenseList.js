@@ -6,8 +6,8 @@ import Navbar from "./Navbar";
 import { TOKENROLEPATH, USERROLE } from "../config/Constants";
 import ProtectedRoute from "./ProtectedRoute";
 import { jwtDecode } from "jwt-decode";
-import CircularProgress from '@mui/material/CircularProgress';
-import Box from '@mui/material/Box';
+import CircularProgress from "@mui/material/CircularProgress";
+import Box from "@mui/material/Box";
 
 const ExpenseList = () => {
   const [expenses, setExpenses] = useState([]);
@@ -48,8 +48,7 @@ const ExpenseList = () => {
       </Box>
     );
   }
-  
-  
+
   if (error) return <p className="error">{error}</p>;
 
   const filteredExpenses = expenses.filter((expense) => {
@@ -70,7 +69,10 @@ const ExpenseList = () => {
       <div className="expense-list">
         <h2>Expense Forms List</h2>
 
-        <div className="filter-section">
+        {(jwtDecode(localStorage.getItem("token"))[TOKENROLEPATH] ===
+          USERROLE[0] ||
+          jwtDecode(localStorage.getItem("token"))[TOKENROLEPATH] ===
+            USERROLE[3]) && (
           <select
             value={filterStatus}
             onChange={(e) => setFilterStatus(e.target.value)}
@@ -81,7 +83,8 @@ const ExpenseList = () => {
             <option value="Rejected">Rejected</option>
             <option value="Approved">Approved</option>
           </select>
-
+        )}
+        <div className="filter-section">
           <select
             value={filterCurrency}
             onChange={(e) => setFilterCurrency(e.target.value)}
@@ -92,7 +95,6 @@ const ExpenseList = () => {
             <option value="USD">EUR</option>
             <option value="USD">PKR</option>
             <option value="USD">INR</option>
-
           </select>
         </div>
 

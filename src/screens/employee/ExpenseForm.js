@@ -1,9 +1,13 @@
 import React, { useState, useEffect } from "react";
 import "../../styles/ExpenseForm.css";
-import { CURRENCYOPTIONS, TOKENROLEPATH, USERROLE } from "../../config/Constants";
-import { submitExpenses } from "../../services/ExpenseFormService"; 
+import {
+  CURRENCYOPTIONS,
+  TOKENROLEPATH,
+  USERROLE,
+} from "../../config/Constants";
+import { submitExpenses } from "../../services/ExpenseFormService";
 import minusIcon from "../../assest/minus.png";
-import { useNavigate } from "react-router-dom"; 
+import { useNavigate } from "react-router-dom";
 import Navbar from "../../components/Navbar";
 import ProtectedRoute from "../../components/ProtectedRoute";
 import { jwtDecode } from "jwt-decode";
@@ -15,47 +19,45 @@ const ExpenseForm = () => {
   const navigate = useNavigate();
   const [currency, setCurrency] = useState(CURRENCYOPTIONS[0]);
   const [categories, setCategories] = useState([]);
-  const [expenses, setExpenses] = useState([
-  
-  ]);
+  const [expenses, setExpenses] = useState([]);
   const [total, setTotal] = useState(0);
-
 
   useEffect(() => {
     const fetchCategories = async () => {
       try {
-        const token = localStorage.getItem('token');
-  
+        const token = localStorage.getItem("token");
+
         const response = await axios.get(CATEGORYURL, {
           headers: {
-            'Authorization': `Bearer ${token}`,
-            'Content-Type': 'application/json',
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
           },
         });
         const categoriesData = response.data.result; // Kategorileri al
-  
+
         setCategories(categoriesData); // Kategorileri duruma ayarla
-  
+
         // Eğer kategoriler mevcutsa, ilk kategorinin categoryId'si ile harcama öğelerini ayarla
         if (categoriesData.length > 0) {
-          setExpenses([{
-            description: "",
-            amount: 0,
-            location: "",
-            categoryId: categoriesData[0].categoryId, // İlk kategoriyi ayarla
-            receiptNumber: "",
-            error: "",
-            isValid: true,
-          }]);
+          setExpenses([
+            {
+              description: "",
+              amount: 0,
+              location: "",
+              categoryId: categoriesData[0].categoryId, // İlk kategoriyi ayarla
+              receiptNumber: "",
+              error: "",
+              isValid: true,
+            },
+          ]);
         }
       } catch (error) {
         console.error("Failed to fetch categories:", error);
       }
     };
-  
+
     fetchCategories();
   }, []);
-  
 
   const handleExpenseChange = (index, field, value) => {
     const updatedExpenses = [...expenses];
@@ -135,7 +137,7 @@ const ExpenseForm = () => {
       const payload = {
         totalAmount: total,
         currency: currency,
-        expenses: expenses.map(expense => ({
+        expenses: expenses.map((expense) => ({
           description: expense.description,
           amount: expense.amount,
           location: expense.location,
@@ -158,7 +160,9 @@ const ExpenseForm = () => {
 
   return (
     <div>
-      <Navbar  userRole={jwtDecode(localStorage.getItem('token'))[TOKENROLEPATH]} />
+      <Navbar
+        userRole={jwtDecode(localStorage.getItem("token"))[TOKENROLEPATH]}
+      />
 
       <form onSubmit={handleSubmit}>
         <h2>Expense Form</h2>
@@ -200,7 +204,7 @@ const ExpenseForm = () => {
                 handleExpenseChange(index, "location", e.target.value)
               }
             />
-            
+
             <input
               type="text"
               placeholder="Receipt Number"
