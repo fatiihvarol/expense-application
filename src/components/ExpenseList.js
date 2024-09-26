@@ -120,8 +120,14 @@ const ExpenseList = () => {
                 <p>
                   <strong>Status:</strong> {expense.expenseStatus}
                 </p>
+                {expense.rejectionDescription && (
+                  <p>
+                    <strong>Rejection Description:</strong>{" "}
+                    {expense.rejectionDescription}
+                  </p>
+                )}
                 <p>
-                  <strong>Number of Expenses:</strong> {expense.expenses.length}
+                  <strong>Total Expenses:</strong> {expense.expenses.length}
                 </p>
               </li>
             ))}

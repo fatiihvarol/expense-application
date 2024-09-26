@@ -60,6 +60,10 @@ const ExpenseForm = () => {
   }, []);
 
   const handleExpenseChange = (index, field, value) => {
+    if (field === "amount" && value  > 5000) {
+      alert("Expense cannot exceed 5000")
+      return;
+    }
     const updatedExpenses = [...expenses];
     updatedExpenses[index][field] = value;
     updatedExpenses[index].isValid = true;
@@ -113,14 +117,10 @@ const ExpenseForm = () => {
         !expense.description.trim() ||
         !expense.amount ||
         !expense.location.trim() ||
-        !expense.receiptNumber.trim() ||
-        parseFloat(expense.amount) > 5000
+        !expense.receiptNumber.trim()
       ) {
         updatedExpenses[index].isValid = false;
         isFormValid = false;
-        if (parseFloat(expense.amount) > 5000) {
-          alert(`Expense cannot exceed 5000 ${currency}.`);
-        }
       } else {
         updatedExpenses[index].isValid = true;
       }
@@ -141,7 +141,7 @@ const ExpenseForm = () => {
           description: expense.description,
           amount: expense.amount,
           location: expense.location,
-          categoryId: expense.categoryId, // Submit the categoryId
+          categoryId: expense.categoryId,
           receiptNumber: expense.receiptNumber,
         })),
       };
@@ -154,7 +154,7 @@ const ExpenseForm = () => {
         alert("Error submitting expenses:", error.message);
       }
     } else {
-      alert("There are empty fields or validation errors");
+      alert("There are empty fields");
     }
   };
 
