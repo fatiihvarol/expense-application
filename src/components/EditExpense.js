@@ -16,6 +16,7 @@ import minusIcon from "../assest/minus.png";
 import { Box, CircularProgress } from "@mui/material";
 import ProtectedRoute from "./ProtectedRoute";
 import { jwtDecode } from "jwt-decode";
+import Rejection from "./Rejection";
 
 const CATEGORYURL = "https://localhost:7295/api/ExpenseCategories";
 
@@ -86,9 +87,15 @@ const EditExpense = () => {
 
   const handleExpenseChange = (index, key, value) => {
     if (key === "remove") {
+      if (expenseData.expenses.length === 1) {
+        return alert("You must have at least one expense.");
+      }
       const updatedExpenses = expenseData.expenses.filter((_, i) => i !== index);
       setExpenseData((prevData) => ({ ...prevData, expenses: updatedExpenses }));
       return;
+    }
+    if (key === "amount" && value > 5000) {
+      return alert("Amount cannot exceed 5000 " + expenseData.currency );
     }
 
     const updatedExpenses = expenseData.expenses.map((exp, i) =>
@@ -96,7 +103,19 @@ const EditExpense = () => {
     );
     setExpenseData((prevData) => ({ ...prevData, expenses: updatedExpenses }));
   };
-
+  const handleRejection = async () => {
+    if (!rejectionDescription.trim()) {
+      return alert("Rejection reason cannot be empty.");
+    }
+  
+    try {
+      await rejectExpense(id, rejectionDescription);
+      alert("Expense rejected successfully");
+      navigate("/expenses");
+    } catch (error) {
+      alert(`Error rejecting expense: ${error.message || "Unknown error"}`);
+    }
+  };
   const handleAddExpense = () => {
     const newExpense = {
       amount: 0,
@@ -113,20 +132,29 @@ const EditExpense = () => {
   };
 
   const handleUpdate = async () => {
-    if (
-      !expenseData.expenses.every(
-        (exp) =>
-          exp.description.trim() &&
-          exp.location.trim() &&
-          exp.categoryId &&
-          exp.receiptNumber.trim() &&
-          exp.amount > 0 &&
-          exp.date
-      )
-    ) {
-      return alert("All fields must be filled in for each expense.");
+    for (let i = 0; i < expenseData.expenses.length; i++) {
+      const exp = expenseData.expenses[i];
+      if (!exp.description.trim()) {
+        return alert(`Expense ${i + 1}: Description cannot be empty.`);
+      }
+      if (!exp.location.trim()) {
+        return alert(`Expense ${i + 1}: Location cannot be empty.`);
+      }
+      if (!exp.categoryId) {
+        return alert(`Expense ${i + 1}: Category must be selected.`);
+      }
+      if (!exp.receiptNumber.trim()) {
+        return alert(`Expense ${i + 1}: Receipt number cannot be empty.`);
+      }
+      if (exp.amount <= 0) {
+        return alert(`Expense ${i + 1}: Amount must be greater than 0.`);
+      }
+      if (!exp.date) {
+        return alert(`Expense ${i + 1}: Date must be selected.`);
+      }
     }
-
+  
+    // Update işlemi burada devam eder...
     try {
       const dataToUpdate = {
         totalAmount: calculateTotalAmount(),
@@ -157,6 +185,7 @@ const EditExpense = () => {
       alert(`Error updating expense: ${error.message || "Unknown error"}`);
     }
   };
+  
 
   const handleAction = async (action, successMessage) => {
     try {
@@ -237,17 +266,18 @@ const EditExpense = () => {
                 />
                 <label>Date:</label>
                 <input
-                  type="date"
-                  value={
-                    expense.date
-                      ? new Date(expense.date).toISOString().split("T")[0]
-                      : ""
-                  }
-                  onChange={(e) =>
-                    handleExpenseChange(index, "date", e.target.value)
-                  }
-                  disabled={!isEditable}
-                />
+  type="date"
+  value={
+    expense.date
+      ? new Date(new Date(expense.date).getTime() - new Date().getTimezoneOffset() * 60000)
+          .toISOString()
+          .split("T")[0]
+      : ""
+  }
+  onChange={(e) => handleExpenseChange(index, "date", e.target.value)}
+  disabled={!isEditable}
+/>
+
                 <label>Location:</label>
                 <input
                   type="text"
@@ -349,6 +379,28 @@ const EditExpense = () => {
             )}
           </div>
         )}
+      {/* Rejection Modal */}
+    {showRejectionModal && (
+      <div className="modal">
+        <div className="modal-content">
+          <button
+            className="modal-close-button"
+            onClick={() => setShowRejectionModal(false)}
+          >
+            &times;
+          </button>
+          <h3>Reject Expense</h3>
+          <textarea
+            value={rejectionDescription}
+            onChange={(e) => setRejectionDescription(e.target.value)}
+            placeholder="Reason for rejection"
+          />
+          <button onClick={handleRejection} className="save-button">
+            Submit Rejection
+          </button>
+        </div>
+      </div>
+    )}
       </div>
     </div>
   );

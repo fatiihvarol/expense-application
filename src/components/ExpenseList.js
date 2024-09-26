@@ -90,15 +90,16 @@ const ExpenseList = () => {
       headerName: "Status",
       cellClass: (params) => `status-${params.value.toLowerCase()}`,
     },
+   
     {
-      field: "rejectionDescription",
-      headerName: "Rejection Description",
+      field: "expenses.length",
+      headerName: "Total Expenses",
       filter: true,
       floatingFilter: true,
     },
     {
-      field: "expenses.length",
-      headerName: "Total Expenses",
+      field: "rejectionDescription",
+      headerName: "Rejection Description",
       filter: true,
       floatingFilter: true,
     },
