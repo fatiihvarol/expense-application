@@ -240,6 +240,18 @@ const EditExpense = () => {
                 ))}
               </select>
             </div>
+            {
+              expenseData.rejectionDescription &&
+              <div>
+              <label>Rejection Description:</label>
+              <input
+                type="text"
+                value={expenseData.rejectionDescription}
+                readOnly
+                disabled={true}
+              />
+            </div>
+            }
             {expenseData.expenses.map((expense, index) => (
               <div key={index} className="expense-item">
                 <label>Amount:</label>

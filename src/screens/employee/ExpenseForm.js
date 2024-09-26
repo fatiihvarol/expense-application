@@ -60,8 +60,8 @@ const ExpenseForm = () => {
   }, []);
 
   const handleExpenseChange = (index, field, value) => {
-    if (field === "amount" && value  > 5000) {
-      alert("Expense cannot exceed 5000")
+    if (field === "amount" && value > 5000) {
+      alert("Expense cannot exceed 5000");
       return;
     }
     const updatedExpenses = [...expenses];
@@ -92,13 +92,16 @@ const ExpenseForm = () => {
         categoryId: categories[0].categoryId,
         receiptNumber: "",
         error: "",
-        date : "",
+        date: "",
         isValid: true,
       },
     ]);
   };
 
   const handleDeleteExpense = (index) => {
+    if (expenses.length <= 1) {
+      return alert("You must have at least one expense.");
+    }
     const updatedExpenses = expenses.filter((_, i) => i !== index);
     setExpenses(updatedExpenses);
     setTotal(
@@ -118,7 +121,7 @@ const ExpenseForm = () => {
         !expense.description.trim() ||
         !expense.amount ||
         !expense.location.trim() ||
-        !expense.receiptNumber.trim()||
+        !expense.receiptNumber.trim() ||
         !expense.date
       ) {
         updatedExpenses[index].isValid = false;
@@ -145,7 +148,7 @@ const ExpenseForm = () => {
           location: expense.location,
           categoryId: expense.categoryId,
           receiptNumber: expense.receiptNumber,
-          date : expense.date
+          date: expense.date,
         })),
       };
 
@@ -207,7 +210,7 @@ const ExpenseForm = () => {
                 handleExpenseChange(index, "location", e.target.value)
               }
             />
-              <input
+            <input
               type="date"
               value={expense.date}
               onChange={(e) =>

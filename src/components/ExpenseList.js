@@ -22,6 +22,7 @@ const ExpenseList = () => {
   const pagination = true;
   const paginationPageSize = 500;
   const paginationPageSizeSelector = [200, 500, 1000];
+
   useEffect(() => {
     const getExpenses = async () => {
       try {
@@ -66,6 +67,12 @@ const ExpenseList = () => {
     return matchesStatus && matchesCurrency;
   });
 
+  const formatCreatedDate = (dateString) => {
+    const options = { year: 'numeric', month: 'long', day: 'numeric' };
+    const date = new Date(dateString);
+    return date.toLocaleDateString('en-En', options); // Türkçe format
+  };
+
   const colDefs = [
     {
       field: "employeeId",
@@ -89,8 +96,9 @@ const ExpenseList = () => {
       field: "expenseStatus",
       headerName: "Status",
       cellClass: (params) => `status-${params.value.toLowerCase()}`,
+      filter: true,
+      floatingFilter: true,
     },
-   
     {
       field: "expenses.length",
       headerName: "Total Expenses",
@@ -98,10 +106,16 @@ const ExpenseList = () => {
       floatingFilter: true,
     },
     {
-      field: "rejectionDescription",
-      headerName: "Rejection Description",
-      filter: true,
-      floatingFilter: true,
+      field: "createdDate",
+      headerName: "Created Date",
+      valueGetter: (params) => formatCreatedDate(params.data.createdDate),
+      filter: "agTextColumnFilter", // Metinle filtreleme
+      floatingFilter: true, // Yüzen filtreyi etkinleştir
+      filterParams: {
+        // Filtre için parametreler
+        filterOptions: ['contains'], // Sadece "contains" seçeneğini göster
+        textFormatter: (text) => text.trim().toLowerCase(), // Metin düzenleme
+      },
     },
   ];
 
