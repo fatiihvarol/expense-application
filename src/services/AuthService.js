@@ -1,7 +1,7 @@
 import axios from 'axios';
 import { BASEURL } from '../config/Constants'; 
 
-const API_URL = `${BASEURL}/Auth/login`;
+const API_URL = `${BASEURL}/Auth/Login`;
 
 export const login = async (email, password) => {
     try {
