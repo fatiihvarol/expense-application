@@ -8,6 +8,9 @@ import ProtectedRoute from "./ProtectedRoute";
 import { jwtDecode } from "jwt-decode";
 import CircularProgress from "@mui/material/CircularProgress";
 import Box from "@mui/material/Box";
+import { AgGridReact } from "ag-grid-react"; // React Data Grid Component
+import "ag-grid-community/styles/ag-grid.css"; // Mandatory CSS required by the Data Grid
+import "ag-grid-community/styles/ag-theme-quartz.css"; // Optional Theme applied to the Data Grid
 
 const ExpenseList = () => {
   const [expenses, setExpenses] = useState([]);
@@ -16,7 +19,9 @@ const ExpenseList = () => {
   const [filterStatus, setFilterStatus] = useState("All");
   const [filterCurrency, setFilterCurrency] = useState("All");
   const navigate = useNavigate();
-
+  const pagination = true;
+  const paginationPageSize = 500;
+  const paginationPageSizeSelector = [200, 500, 1000];
   useEffect(() => {
     const getExpenses = async () => {
       try {
@@ -61,6 +66,44 @@ const ExpenseList = () => {
     return matchesStatus && matchesCurrency;
   });
 
+  const colDefs = [
+    {
+      field: "employeeId",
+      headerName: "Employee No",
+      filter: true,
+      floatingFilter: true,
+    },
+    {
+      field: "totalAmount",
+      headerName: "Total Amount",
+      filter: true,
+      floatingFilter: true,
+    },
+    {
+      field: "currency",
+      headerName: "Currency",
+      filter: true,
+      floatingFilter: true,
+    },
+    {
+      field: "expenseStatus",
+      headerName: "Status",
+      cellClass: (params) => `status-${params.value.toLowerCase()}`,
+    },
+    {
+      field: "rejectionDescription",
+      headerName: "Rejection Description",
+      filter: true,
+      floatingFilter: true,
+    },
+    {
+      field: "expenses.length",
+      headerName: "Total Expenses",
+      filter: true,
+      floatingFilter: true,
+    },
+  ];
+
   return (
     <div>
       <Navbar
@@ -69,69 +112,19 @@ const ExpenseList = () => {
       <div className="expense-list">
         <h2>Expense Forms List</h2>
 
-        {(jwtDecode(localStorage.getItem("token"))[TOKENROLEPATH] ===
-          USERROLE[0] ||
-          jwtDecode(localStorage.getItem("token"))[TOKENROLEPATH] ===
-            USERROLE[3]) && (
-          <select
-            value={filterStatus}
-            onChange={(e) => setFilterStatus(e.target.value)}
-          >
-            <option value="All">All Statuses</option>
-            <option value="Paid">Paid</option>
-            <option value="Pending">Pending</option>
-            <option value="Rejected">Rejected</option>
-            <option value="Approved">Approved</option>
-          </select>
-        )}
-        <div className="filter-section">
-          <select
-            value={filterCurrency}
-            onChange={(e) => setFilterCurrency(e.target.value)}
-          >
-            <option value="All">All Currencies</option>
-            <option value="TRY">TRY</option>
-            <option value="USD">USD</option>
-            <option value="USD">EUR</option>
-            <option value="USD">PKR</option>
-            <option value="USD">INR</option>
-          </select>
-        </div>
-
         {filteredExpenses.length === 0 ? (
           <p>No expenses found.</p>
         ) : (
-          <ul>
-            {filteredExpenses.map((expense) => (
-              <li
-                key={expense.id}
-                className={`expense-item ${expense.expenseStatus.toLowerCase()}`}
-              >
-                <p>
-                  <strong>Employee No:</strong> {expense.employeeId}
-                </p>
-                <p
-                  className={`expense-header`}
-                  onClick={() => handleEdit(expense.id)}
-                >
-                  <strong>Total Amount:</strong> {expense.totalAmount}{" "}
-                  {expense.currency}
-                </p>
-                <p>
-                  <strong>Status:</strong> {expense.expenseStatus}
-                </p>
-                {expense.rejectionDescription && (
-                  <p>
-                    <strong>Rejection Description:</strong>{" "}
-                    {expense.rejectionDescription}
-                  </p>
-                )}
-                <p>
-                  <strong>Total Expenses:</strong> {expense.expenses.length}
-                </p>
-              </li>
-            ))}
-          </ul>
+          <div
+            className="ag-theme-quartz"
+            style={{ height: 500, width: "100%" }}
+          >
+            <AgGridReact
+              rowData={filteredExpenses}
+              columnDefs={colDefs}
+              onRowClicked={(event) => handleEdit(event.data.id)}
+            />
+          </div>
         )}
       </div>
     </div>

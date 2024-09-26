@@ -1,78 +1,68 @@
+/* Expense List container */
 .expense-list {
-    padding: 90px;
-    background-color: #f9f9f9;
-    border-radius: 15px;
-    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
-    max-width: 900px;
-    margin: 40px auto;
-    transition: background-color 0.3s ease;
-}
-
-h2 {
-    font-size: 32px;
-    margin-bottom: 25px;
-    color: #444;
-    text-align: center;
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    letter-spacing: 1px;
-}
-
-ul {
-    list-style-type: none;
-    padding: 0;
-}
-
-.expense-item {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
+    max-width: 1200px;
+    margin: 0 auto;
     padding: 20px;
-    margin-bottom: 15px;
-    border-radius: 10px;
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
-    cursor: pointer;
-    background-color: #fff;
-    border-left: 6px solid transparent;
-}
-
-.expense-item:hover {
-    transform: scale(1.03);
-    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
-}
-
-.expense-item.approved {
-    background-color: #e7f9e7;
-    border-left-color: #28a745;
-}
-
-.expense-item.rejected {
-    background-color: #f9e7e7;
-    border-left-color: #dc3545;
-}
-
-.expense-item.pending {
-    background-color: #fff7e6;
-    border-left-color: #fd7e14;
-}
-
-.expense-details {
-    flex-grow: 1;
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-}
-
-.expense-header {
-    font-weight: bold;
-    font-size: 20px;
+    background-color: #f9f9f9;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  }
+  
+  h2 {
+    text-align: center;
+    font-size: 24px;
+    margin-bottom: 20px;
     color: #333;
-    margin-bottom: 5px;
-}
-
-.centered {
+  }
+  
+  .filter-section {
+    display: flex;
+    justify-content: flex-end;
+    margin-bottom: 20px;
+  }
+  
+  select {
+    padding: 8px;
+    margin-left: 10px;
+    border-radius: 4px;
+    border: 1px solid #ccc;
+    font-size: 14px;
+  }
+  
+  .centered {
     display: flex;
     justify-content: center;
-    align-items: center; 
+    align-items: center;
     height: 100vh;
   }
   
-
-
+  .error {
+    color: red;
+    text-align: center;
+  }
+  
+  .ag-theme-quartz {
+    border-radius: 8px;
+    border: 1px solid #e0e0e0;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+  }
+  .status-paid {
+    color: green;
+    font-weight: bold;
+  }
+  
+  .status-pending {
+    color: orange;
+    font-weight: bold;
+  }
+  
+  .status-rejected {
+    color: red;
+    font-weight: bold;
+  }
+  
+  .status-approved {
+    color: blue;
+    font-weight: bold;
+  }
+    

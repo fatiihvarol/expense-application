@@ -85,14 +85,31 @@ const EditExpense = () => {
   };
 
   const handleExpenseChange = (index, key, value) => {
-    if (key === "amount" && value > 5000) {
-      alert("Allowed Expense Limit is 5000 "+expenseData.currency);
+    if (key === "remove") {
+      const updatedExpenses = expenseData.expenses.filter((_, i) => i !== index);
+      setExpenseData((prevData) => ({ ...prevData, expenses: updatedExpenses }));
       return;
     }
+
     const updatedExpenses = expenseData.expenses.map((exp, i) =>
       i === index ? { ...exp, [key]: value } : exp
     );
     setExpenseData((prevData) => ({ ...prevData, expenses: updatedExpenses }));
+  };
+
+  const handleAddExpense = () => {
+    const newExpense = {
+      amount: 0,
+      description: "",
+      location: "",
+      categoryId: categories.length ? categories[0].categoryId : "",
+      receiptNumber: "",
+      date: new Date().toISOString().split("T")[0], // Set current date
+    };
+    setExpenseData((prevData) => ({
+      ...prevData,
+      expenses: [...prevData.expenses, newExpense],
+    }));
   };
 
   const handleUpdate = async () => {
@@ -103,7 +120,7 @@ const EditExpense = () => {
           exp.location.trim() &&
           exp.categoryId &&
           exp.receiptNumber.trim() &&
-          exp.amount > 0&&
+          exp.amount > 0 &&
           exp.date
       )
     ) {
@@ -275,12 +292,7 @@ const EditExpense = () => {
             ))}
             {isEditable && (
               <div>
-                <button
-                  onClick={() =>
-                    handleExpenseChange(expenseData.expenses.length, "add", {})
-                  }
-                  className="save-button"
-                >
+                <button onClick={handleAddExpense} className="save-button">
                   Add Expense
                 </button>
                 <button onClick={handleUpdate} className="update-button">
@@ -320,54 +332,28 @@ const EditExpense = () => {
                 </button>
               </div>
             )}
-            {userRole === "Accountant" && (
-              <button
-                onClick={() => handleAction(payExpense, "Expense Form Paid")}
-                className="save-button"
-              >
-                Pay Expense Form
-              </button>
+            {userRole === USERROLE[2] && (
+              <div>
+                <button
+                  onClick={() =>
+                    handleAction(
+                      payExpense,
+                      "Expense Form Paid Successfully"
+                    )
+                  }
+                  className="save-button"
+                >
+                  Pay Expense
+                </button>
+              </div>
             )}
-            {userRole === "Admin" && (
-              <button onClick={() => navigate(`/history/${id}`)}>
-                See History
-              </button>
-            )}
-          </div>
-        )}
-        {showRejectionModal && (
-          <div className="modal">
-            <div className="modal-content">
-              <button
-                className="modal-close-button"
-                onClick={() => setShowRejectionModal(false)}
-              >
-                &times;
-              </button>
-              <h3>Reject Expense</h3>
-              <textarea
-                value={rejectionDescription}
-                onChange={(e) => setRejectionDescription(e.target.value)}
-                placeholder="Reason for rejection"
-              />
-              <button
-                onClick={() =>
-                  handleAction(
-                    () => rejectExpense(id, rejectionDescription),
-                    "Expense rejected successfully"
-                  )
-                }
-                className="save-button"
-              >
-                Submit Rejection
-              </button>
-            </div>
           </div>
         )}
       </div>
     </div>
   );
 };
+
 
 export default () => (
   <ProtectedRoute
