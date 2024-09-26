@@ -92,6 +92,7 @@ const ExpenseForm = () => {
         categoryId: categories[0].categoryId,
         receiptNumber: "",
         error: "",
+        date : "",
         isValid: true,
       },
     ]);
@@ -117,7 +118,8 @@ const ExpenseForm = () => {
         !expense.description.trim() ||
         !expense.amount ||
         !expense.location.trim() ||
-        !expense.receiptNumber.trim()
+        !expense.receiptNumber.trim()||
+        !expense.date
       ) {
         updatedExpenses[index].isValid = false;
         isFormValid = false;
@@ -143,6 +145,7 @@ const ExpenseForm = () => {
           location: expense.location,
           categoryId: expense.categoryId,
           receiptNumber: expense.receiptNumber,
+          date : expense.date
         })),
       };
 
@@ -202,6 +205,13 @@ const ExpenseForm = () => {
               value={expense.location}
               onChange={(e) =>
                 handleExpenseChange(index, "location", e.target.value)
+              }
+            />
+              <input
+              type="date"
+              value={expense.date}
+              onChange={(e) =>
+                handleExpenseChange(index, "date", e.target.value)
               }
             />
 

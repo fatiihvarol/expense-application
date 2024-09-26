@@ -11,12 +11,12 @@ import {
   approveExpense,
   payExpense,
 } from "../services/ExpenseFormService";
-import { fetchExpenseFormHistory } from "../services/ExpenseFormHistoryService";
-import { jwtDecode } from "jwt-decode";
 import axios from "axios";
 import minusIcon from "../assest/minus.png";
-import ProtectedRoute from "./ProtectedRoute";
 import { Box, CircularProgress } from "@mui/material";
+import ProtectedRoute from "./ProtectedRoute";
+import { jwtDecode } from "jwt-decode";
+
 const CATEGORYURL = "https://localhost:7295/api/ExpenseCategories";
 
 const EditExpense = () => {
@@ -31,220 +31,136 @@ const EditExpense = () => {
   const [showRejectionModal, setShowRejectionModal] = useState(false);
 
   useEffect(() => {
-    const token = localStorage.getItem("token");
-    if (token) {
-      const decodedToken = jwtDecode(token);
-      setUserRole(decodedToken[TOKENROLEPATH]); // Get user role from token
-    }
+    const fetchData = async () => {
+      const token = localStorage.getItem("token");
+      if (token) {
+        const decodedToken = jwtDecode(token);
+        setUserRole(decodedToken[TOKENROLEPATH]);
+      }
 
-    const fetchExpense = async () => {
       try {
-        const response = await GetxpenseById(id);
-        if (response.isSuccess) {
-          const updatedExpenses = response.result.expenses.map((expense) => ({
-            ...expense,
-            categoryId: expense.category.categoryId || "",
-          }));
-          setExpenseData({ ...response.result, expenses: updatedExpenses });
-        } else if (response.errorMessage === "You don't have permission") {
-          navigate("/404"); // Redirect to 404
-        } else {
+        const expenseResponse = await GetxpenseById(id);
+        if (!expenseResponse.isSuccess) {
+          if (expenseResponse.errorMessage === "You don't have permission") {
+            return navigate("/404");
+          }
           setError("Expense not found.");
+        } else {
+          const updatedExpenses = expenseResponse.result.expenses.map(
+            (expense) => ({
+              ...expense,
+              categoryId: expense.category.categoryId || "",
+            })
+          );
+          setExpenseData({
+            ...expenseResponse.result,
+            expenses: updatedExpenses,
+          });
         }
-      } catch (err) {
-        console.log(err);
+      } catch (error) {
+        console.error("Error fetching expense:", error);
         navigate("/404");
+      }
+
+      try {
+        const categoriesResponse = await axios.get(CATEGORYURL, {
+          headers: { Authorization: `Bearer ${token}` },
+        });
+        setCategories(categoriesResponse.data.result);
+      } catch (error) {
+        console.error("Failed to fetch categories:", error);
       } finally {
         setLoading(false);
       }
     };
 
-    const fetchCategories = async () => {
-      try {
-        const token = localStorage.getItem("token");
-        const response = await axios.get(CATEGORYURL, {
-          headers: {
-            Authorization: `Bearer ${token}`,
-            "Content-Type": "application/json",
-          },
-        });
-        setCategories(response.data.result); // Set fetched categories
-      } catch (error) {
-        console.error("Failed to fetch categories:", error);
-      }
-    };
-
-    fetchExpense();
-    fetchCategories(); // Fetch categories when component mounts
+    fetchData();
   }, [id, navigate]);
 
   const calculateTotalAmount = () => {
-    if (expenseData && expenseData.expenses) {
-      return expenseData.expenses.reduce(
-        (sum, expense) => sum + expense.amount,
-        0
-      );
+    return (
+      expenseData?.expenses.reduce((sum, expense) => sum + expense.amount, 0) ||
+      0
+    );
+  };
+
+  const handleExpenseChange = (index, key, value) => {
+    if (key === "amount" && value > 5000) {
+      alert("Allowed Expense Limit is 5000 "+expenseData.currency);
+      return;
     }
-    return 0;
+    const updatedExpenses = expenseData.expenses.map((exp, i) =>
+      i === index ? { ...exp, [key]: value } : exp
+    );
+    setExpenseData((prevData) => ({ ...prevData, expenses: updatedExpenses }));
   };
 
   const handleUpdate = async () => {
-    for (const expense of expenseData.expenses) {
-      console.log(expense);
-      // Check only for mandatory fields
-      if (
-        !expense.description.trim() ||
-        !expense.location.trim() ||
-        !expense.categoryId ||
-        !expense.receiptNumber.trim()
-      ) {
-        alert("All fields must be filled in for each expense.");
-        return;
-      }
-      if (expense.amount <= 0) {
-        alert("Amount must be greater than 0.");
-        return;
-      }
+    if (
+      !expenseData.expenses.every(
+        (exp) =>
+          exp.description.trim() &&
+          exp.location.trim() &&
+          exp.categoryId &&
+          exp.receiptNumber.trim() &&
+          exp.amount > 0&&
+          exp.date
+      )
+    ) {
+      return alert("All fields must be filled in for each expense.");
     }
-   
 
     try {
       const dataToUpdate = {
         totalAmount: calculateTotalAmount(),
         currency: expenseData.currency,
-        expenses: expenseData.expenses.map((exp) => ({
-          amount: exp.amount,
-          description: exp.description.trim(),
-          location: exp.location.trim(),
-          categoryId: exp.categoryId,
-          receiptNumber: exp.receiptNumber.trim(),
-          expenseFormId: expenseData.id,
-        })),
+        expenses: expenseData.expenses.map(
+          ({
+            amount,
+            description,
+            location,
+            categoryId,
+            receiptNumber,
+            date,
+          }) => ({
+            amount,
+            description,
+            location,
+            categoryId,
+            receiptNumber,
+            date,
+            expenseFormId: expenseData.id,
+          })
+        ),
       };
-
-      // Call the service with updated data
       await updateExpense(id, dataToUpdate);
       alert("Expense updated successfully!");
       navigate("/expenses");
     } catch (error) {
-      alert("Error updating expense: " + (error.message || "Unknown error"));
+      alert(`Error updating expense: ${error.message || "Unknown error"}`);
     }
   };
-  const handleHistory = async (id) =>
-    {
-        navigate(`/history/${id}`);
-    }
-  const handleDelete = async () => {
+
+  const handleAction = async (action, successMessage) => {
     try {
-      await DeleteExpense(id);
-      alert("Expense Form Deleted Successfully");
+      await action(id);
+      alert(successMessage);
       navigate("/expenses");
     } catch (error) {
-      alert("Error deleting expense: " + (error.message || "Unknown error"));
+      alert(`Error: ${error.message || "Unknown error"}`);
     }
   };
 
-  const handleApprove = async () => {
-    try {
-      await approveExpense(id);
-      alert("Expense Form Approved Successfully");
-      navigate("/expenses");
-    } catch (error) {
-      alert("Error approving expense: " + (error.message || "Unknown error"));
-    }
-  };
-
-  const handleReject = () => {
-    setShowRejectionModal(true);
-  };
-
-  const handlePay = async () => {
-    try {
-      const response = await payExpense(id);
-      if (response.isSuccess) {
-        alert("Expense Form Paid");
-        navigate("/expenses");
-      }
-    } catch (error) {
-      alert(error.message);
-    }
-  };
-
-  const submitRejection = async () => {
-    if (!rejectionDescription) {
-      alert("Please provide a reason for rejection.");
-      return;
-    }
-
-    try {
-      await rejectExpense(id, rejectionDescription);
-      alert("Expense rejected successfully.");
-      navigate("/expenses");
-    } catch (error) {
-      alert("Error rejecting expense: " + (error.message || "Unknown error"));
-    } finally {
-      setShowRejectionModal(false);
-    }
-  };
-
-  const handleAmountChange = (index, value) => {
-    if (value > 5000) {
-      alert("Each expense amount cannot exceed 5000.");
-      return;
-    }
-
-    const updatedExpenses = [...expenseData.expenses];
-    updatedExpenses[index].amount = parseFloat(value);
-    setExpenseData({ ...expenseData, expenses: updatedExpenses });
-  };
-
-  const handleCategoryChange = (index, categoryId) => {
-    const updatedExpenses = [...expenseData.expenses];
-    updatedExpenses[index].categoryId = categoryId;
-    setExpenseData({ ...expenseData, expenses: updatedExpenses });
-  };
-
-  const addExpense = () => {
-    const newExpense = {
-      amount: 0,
-      description: "",
-      location: "",
-      categoryId: categories[0].categoryId,
-      receiptNumber: "",
-    };
-    setExpenseData({
-      ...expenseData,
-      expenses: [...expenseData.expenses, newExpense],
-    });
-  };
-
-  const removeExpense = (index) => {
-    if (expenseData.expenses.length <= 1) {
-      alert("At least one expense must remain.");
-      return;
-    }
-
-    const updatedExpenses = expenseData.expenses.filter((_, i) => i !== index);
-    setExpenseData({ ...expenseData, expenses: updatedExpenses });
-  };
-
-  if (loading) {
+  if (loading)
     return (
       <Box className="centered">
         <CircularProgress />
       </Box>
     );
-  }
-
-  if (error) {
-    return <div>{error}</div>;
-  }
+  if (error) return <div>{error}</div>;
 
   const isEditable =
-    expenseData &&
-    (expenseData.expenseStatus === "Pending" ||
-      expenseData.expenseStatus === "Rejected") &&
-    userRole === USERROLE[0];
+    expenseData?.expenseStatus !== "Approved" && userRole === USERROLE[0];
 
   return (
     <div>
@@ -284,66 +200,66 @@ const EditExpense = () => {
                 <input
                   type="number"
                   value={expense.amount}
-                  onChange={(e) => handleAmountChange(index, e.target.value)}
+                  onChange={(e) =>
+                    handleExpenseChange(
+                      index,
+                      "amount",
+                      parseFloat(e.target.value)
+                    )
+                  }
                   disabled={!isEditable}
                 />
                 <label>Description:</label>
                 <input
                   type="text"
                   value={expense.description}
-                  onChange={(e) => {
-                    const updatedExpenses = [...expenseData.expenses];
-                    updatedExpenses[index].description = e.target.value;
-                    setExpenseData({
-                      ...expenseData,
-                      expenses: updatedExpenses,
-                    });
-                  }}
-                  placeholder="Description"
+                  onChange={(e) =>
+                    handleExpenseChange(index, "description", e.target.value)
+                  }
+                  disabled={!isEditable}
+                />
+                <label>Date:</label>
+                <input
+                  type="date"
+                  value={
+                    expense.date
+                      ? new Date(expense.date).toISOString().split("T")[0]
+                      : ""
+                  }
+                  onChange={(e) =>
+                    handleExpenseChange(index, "date", e.target.value)
+                  }
                   disabled={!isEditable}
                 />
                 <label>Location:</label>
                 <input
                   type="text"
                   value={expense.location}
-                  onChange={(e) => {
-                    const updatedExpenses = [...expenseData.expenses];
-                    updatedExpenses[index].location = e.target.value;
-                    setExpenseData({
-                      ...expenseData,
-                      expenses: updatedExpenses,
-                    });
-                  }}
-                  placeholder="Location"
+                  onChange={(e) =>
+                    handleExpenseChange(index, "location", e.target.value)
+                  }
                   disabled={!isEditable}
                 />
                 <label>Receipt Number:</label>
                 <input
                   type="text"
                   value={expense.receiptNumber}
-                  onChange={(e) => {
-                    const updatedExpenses = [...expenseData.expenses];
-                    updatedExpenses[index].receiptNumber = e.target.value;
-                    setExpenseData({
-                      ...expenseData,
-                      expenses: updatedExpenses,
-                    });
-                  }}
-                  placeholder="Receipt Number"
+                  onChange={(e) =>
+                    handleExpenseChange(index, "receiptNumber", e.target.value)
+                  }
                   disabled={!isEditable}
                 />
                 <label>Category:</label>
                 <select
-                  defaultValue={expense.categoryId}
-                  onChange={(e) => handleCategoryChange(index, e.target.value)}
+                  value={expense.categoryId}
+                  onChange={(e) =>
+                    handleExpenseChange(index, "categoryId", e.target.value)
+                  }
                   disabled={!isEditable}
                 >
-                  {categories.map((category) => (
-                    <option
-                      key={category.categoryId}
-                      value={category.categoryId}
-                    >
-                      {category.categoryName}
+                  {categories.map(({ categoryId, categoryName }) => (
+                    <option key={categoryId} value={categoryId}>
+                      {categoryName}
                     </option>
                   ))}
                 </select>
@@ -352,43 +268,71 @@ const EditExpense = () => {
                     src={minusIcon}
                     alt="Delete Expense"
                     className="delete-expense"
-                    onClick={() => removeExpense(index)}
+                    onClick={() => handleExpenseChange(index, "remove", true)}
                   />
                 )}
               </div>
             ))}
             {isEditable && (
               <div>
-                <button onClick={addExpense} className="save-button">
+                <button
+                  onClick={() =>
+                    handleExpenseChange(expenseData.expenses.length, "add", {})
+                  }
+                  className="save-button"
+                >
                   Add Expense
                 </button>
                 <button onClick={handleUpdate} className="update-button">
                   Update Expense
                 </button>
-                <button onClick={handleDelete} className="reject-button">
+                <button
+                  onClick={() =>
+                    handleAction(
+                      DeleteExpense,
+                      "Expense Form Deleted Successfully"
+                    )
+                  }
+                  className="reject-button"
+                >
                   Delete Expense
                 </button>
               </div>
             )}
             {userRole === USERROLE[1] && (
               <div>
-                <button onClick={handleApprove} className="save-button">
+                <button
+                  onClick={() =>
+                    handleAction(
+                      approveExpense,
+                      "Expense Form Approved Successfully"
+                    )
+                  }
+                  className="save-button"
+                >
                   Approve Expense
                 </button>
-                <button onClick={handleReject} className="reject-button">
+                <button
+                  onClick={() => setShowRejectionModal(true)}
+                  className="reject-button"
+                >
                   Reject Expense
                 </button>
               </div>
             )}
             {userRole === "Accountant" && (
-              <div>
-                <button className="save-button" onClick={handlePay}>Pay Expense Form</button>
-              </div>
+              <button
+                onClick={() => handleAction(payExpense, "Expense Form Paid")}
+                className="save-button"
+              >
+                Pay Expense Form
+              </button>
             )}
-            {userRole === "Admin" && <div>{/* Admin-specific actions */}
-            <button  onClick={() => handleHistory(id)} >See History</button>
-
-                </div>}
+            {userRole === "Admin" && (
+              <button onClick={() => navigate(`/history/${id}`)}>
+                See History
+              </button>
+            )}
           </div>
         )}
         {showRejectionModal && (
@@ -406,14 +350,16 @@ const EditExpense = () => {
                 onChange={(e) => setRejectionDescription(e.target.value)}
                 placeholder="Reason for rejection"
               />
-              <button onClick={submitRejection} className="save-button">
-                Submit Rejection
-              </button>
               <button
-                onClick={() => setShowRejectionModal(false)}
-                className="reject-button"
+                onClick={() =>
+                  handleAction(
+                    () => rejectExpense(id, rejectionDescription),
+                    "Expense rejected successfully"
+                  )
+                }
+                className="save-button"
               >
-                Cancel
+                Submit Rejection
               </button>
             </div>
           </div>

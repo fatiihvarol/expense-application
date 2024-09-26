@@ -11,6 +11,7 @@ const ProtectedRoute = ({ allowedRoles, children }) => {
     const userRole = decodedToken[TOKENROLEPATH];
 
     if (!userRole || !allowedRoles.includes(userRole)) {
+      return <Navigate to="/login" replace />;
     }
 
     return children;
