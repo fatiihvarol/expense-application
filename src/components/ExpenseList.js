@@ -20,8 +20,8 @@ const ExpenseList = () => {
   const [filterCurrency, setFilterCurrency] = useState("All");
   const navigate = useNavigate();
   const pagination = true;
-  const paginationPageSize = 500;
-  const paginationPageSizeSelector = [200, 500, 1000];
+  const paginationPageSize = 10;
+  const paginationPageSizeSelector = [10, 20, 50];
 
   useEffect(() => {
     const getExpenses = async () => {
@@ -144,6 +144,9 @@ const ExpenseList = () => {
               rowData={filteredExpenses}
               columnDefs={colDefs}
               onRowClicked={(event) => handleEdit(event.data.id)}
+              pagination={pagination}
+              paginationPageSize={paginationPageSize}
+              paginationPageSizeSelector={paginationPageSizeSelector}
             />
           </div>
         )}

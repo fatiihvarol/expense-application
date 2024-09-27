@@ -6,12 +6,15 @@
   justify-content: center;  /* Yatayda ortala */
   align-items: center;      /* Dikeyde ortala */
   height: 80%;
-  margin:50px
+  margin:50px;
+  
 }
 
 .ag-theme-quartz {
 
   border-radius: 8px;
+  width: 100%;
+  
   box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
 }
 .status-created {

@@ -14,7 +14,9 @@ const ExpenseFormHistory = () => {
   const { id } = useParams();
   const [history, setHistory] = useState([]);
   const [loading, setLoading] = useState(true); // Loading durumu
-
+  const pagination = true;
+  const paginationPageSize = 10;
+  const paginationPageSizeSelector = [10, 20, 50];
   useEffect(() => {
     const fetchData = async () => {
       setLoading(true); // Veriyi çekmeden önce loading durumunu true yap
@@ -96,11 +98,16 @@ const ExpenseFormHistory = () => {
       <div className="table-container">
         <div
           className="ag-theme-quartz"
-          style={{ height: 500, width: "100%" }}
+          style={{ height: 500, width: "87%" }}
         >
           <AgGridReact
             rowData={history}
             columnDefs={colDefs}
+            pagination={pagination}
+            paginationPageSize={paginationPageSize}
+            paginationPageSizeSelector={paginationPageSizeSelector}
+     
+    
           />
         </div>
       </div>
