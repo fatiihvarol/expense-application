@@ -197,6 +197,11 @@ const EditExpense = () => {
     }
   };
 
+  const handleHistory = async ()=>
+  {
+    navigate('/history/'+id)
+  }
+
   if (loading)
     return (
       <Box className="centered">
@@ -386,6 +391,18 @@ const EditExpense = () => {
                   className="save-button"
                 >
                   Pay Expense
+                </button>
+              </div>
+            )}
+               {userRole === USERROLE[3] && (
+              <div>
+                <button
+                  onClick={() =>
+                    handleHistory()
+                  }
+                  className="save-button"
+                >
+                  Show History
                 </button>
               </div>
             )}

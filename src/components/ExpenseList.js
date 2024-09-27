@@ -75,6 +75,12 @@ const ExpenseList = () => {
 
   const colDefs = [
     {
+      field: "id",
+      headerName: "Expense Id",
+      filter: true,
+      floatingFilter: true,
+    },
+    {
       field: "employeeId",
       headerName: "Employee No",
       filter: true,

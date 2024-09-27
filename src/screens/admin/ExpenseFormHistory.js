@@ -1,15 +1,18 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { fetchExpenseFormHistory } from "../../services/ExpenseFormHistoryService";
-import '../../styles/ExpenseFormHistory.css';
+
 import Navbar from "../../components/Navbar";
 import { USERROLE } from "../../config/Constants";
 import CircularProgress from "@mui/material/CircularProgress"; // CircularProgress bileşenini ekleyin
 import ProtectedRoute from "../../components/ProtectedRoute";
+import { AgGridReact } from "ag-grid-react"; // React Data Grid Component
+import '../../styles/ExpenseFormHistory.css'
+import { Box } from "@mui/material";
 
 const ExpenseFormHistory = () => {
   const { id } = useParams();
-  const [history, setHistory] = useState(null);
+  const [history, setHistory] = useState([]);
   const [loading, setLoading] = useState(true); // Loading durumu
 
   useEffect(() => {
@@ -17,7 +20,7 @@ const ExpenseFormHistory = () => {
       setLoading(true); // Veriyi çekmeden önce loading durumunu true yap
       try {
         const response = await fetchExpenseFormHistory(id);
-        setHistory(response);
+        setHistory(response.result);
       } catch (error) {
         console.error("Failed to fetch expense form history:", error);
       } finally {
@@ -29,39 +32,81 @@ const ExpenseFormHistory = () => {
   }, [id]);
 
   // Tarih ve saat formatlayan fonksiyon
-  const formatDateTime = (dateTime) => {
-    const date = new Date(dateTime);
-    const formattedDate = date.toLocaleDateString('tr-TR');  // Tarihi formatla
-    const formattedTime = date.toLocaleTimeString('tr-TR');  // Saati formatla
-    return `${formattedDate} ${formattedTime}`;  // Tarih ve saati birleştir
+  const formatDateTime = (dateString) => {
+    const options = { year: 'numeric', month: 'long', day: 'numeric' };
+    const date = new Date(dateString);
+    return date.toLocaleDateString('en-En', options); // Türkçe format
   };
+  
+  const colDefs = [
+    {
+      field: "id",
+      headerName: "Transaction Id",
+      filter: true,
+      floatingFilter: true,
+    },
+    {
+      field: "madeBy",
+      headerName: "User Id",
+      filter: true,
+      floatingFilter: true,
+    },
+    {
+      field: "fullName",
+      headerName: "Full Name",
+      filter: true,
+      floatingFilter: true,
+    },
+    {
+      field: "action",
+      headerName: "Transaction Action",
+      cellClass: (params) => `status-${params.value.toLowerCase()}`,
 
+      filter: true,
+      floatingFilter: true,
+    },
+    {
+      field: "date",
+      headerName: "Transaction Date",
+      valueGetter: (params) => formatDateTime(params.data.date),
+      filter: "agTextColumnFilter", // Metinle filtreleme
+      floatingFilter: true, // Yüzen filtreyi etkinleştir
+      filterParams: {
+        // Filtre için parametreler
+        filterOptions: ['contains'], // Sadece "contains" seçeneğini göster
+        textFormatter: (text) => text.trim().toLowerCase(), // Metin düzenleme
+      },
+    },
+  ];
+  const formatCreatedDate = (dateString) => {
+    const options = { year: 'numeric', month: 'long', day: 'numeric' };
+    const date = new Date(dateString);
+    return date.toLocaleDateString('en-En', options); // Türkçe format
+  };
+  if (loading) {
+    return (
+      <Box className="centered">
+        <CircularProgress />
+      </Box>
+    );
+  }
   return (
     <div>
       <Navbar userRole={USERROLE[3]} />
-      <div className="history-page">
-        <div className="history-container">
-          <h2 className="history-title">Expense Form History</h2>
-          {loading ? ( // Eğer loading durumu true ise yükleme göstergesi göster
-            <CircularProgress />
-          ) : history ? (
-            history.result.map((item) => (
-              <div key={item.id} className={`history-item action-${item.action.toLowerCase()}`}>
-                <div className="history-content">
-                  <p><strong>Action:</strong> <span>{item.action}</span></p>
-                  <p><strong>Date:</strong> <span>{formatDateTime(item.date)}</span></p>
-                  <p><strong>User ID:</strong> <span>{item.madeBy}</span></p>
-                  <p><strong>Full Name:</strong> <span>{item.fullName}</span></p>
-                </div>
-              </div>
-            ))
-          ) : (
-            <p className="loading">No history found.</p>
-          )}
+      <div className="table-container">
+        <div
+          className="ag-theme-quartz"
+          style={{ height: 500, width: "100%" }}
+        >
+          <AgGridReact
+            rowData={history}
+            columnDefs={colDefs}
+          />
         </div>
       </div>
     </div>
   );
+  
 };
 
 export default () => (
