@@ -69,7 +69,7 @@ const  PieChartReport =()=> {
 }
 export default () => (
   <ProtectedRoute
-    allowedRoles={[USERROLE[0], USERROLE[1], USERROLE[2], USERROLE[3]]}
+    allowedRoles={ USERROLE[3]}
   >
     <PieChartReport />
   </ProtectedRoute>

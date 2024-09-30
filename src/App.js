@@ -11,6 +11,7 @@ import EditExpense from "./components/EditExpense";
 import ExpenseFormHistory from "./screens/admin/ExpenseFormHistory";
 import PieChartReport from "./screens/admin/PieChartReport";
 import BarChartReport from "./screens/admin/BarChartReport";
+import BarChartByStatus from "./screens/admin/BarChartByStatus";
 
 
   function App() {
@@ -29,6 +30,7 @@ import BarChartReport from "./screens/admin/BarChartReport";
                 <Route path="/history/:id" element = {<ExpenseFormHistory/>}/>
                 <Route path="/pie-chart" element = {<PieChartReport/>}/>
                 <Route path="/bar-chart" element = {<BarChartReport/>}/>
+                <Route path="/bar-chart-status" element = {<BarChartByStatus/>}/>
 
                 <Route path="*" element={<NotFound />} />
 

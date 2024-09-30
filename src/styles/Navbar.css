@@ -60,31 +60,41 @@
 .navbar .dropdown {
   cursor: pointer;
 }
-
+/* Dropdown menüde genişlemeyi önleyip tam genişlik yerine içerik genişliği */
 .navbar .dropdown-menu {
-  display: none;
-  position: absolute;
-  top: 100%;
-  left: 0;
-  background-color: #fff;
+  display: none; /* Başlangıçta görünmesin */
+  position: absolute; /* Sabit genişlemeyi önler, menü yukarıdan aşağıya açılır */
+  top: 100%; /* Ana menüden hemen sonra aşağıda açılır */
+  left: 0; /* Sol tarafa hizalanır */
+  width: auto; /* Genişliği otomatik ayarlanır */
+  background-color: #fff; /* Arka plan beyaz */
   box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
   padding: 10px;
   list-style: none;
   z-index: 1000;
 }
 
+/* Menü hover olduğunda görünür */
 .navbar .dropdown:hover .dropdown-menu {
   display: block;
 }
 
+/* Dropdown menüdeki öğeler */
 .navbar .dropdown-menu li {
-  margin-bottom: 10px;
+  margin-bottom: 10px; /* Öğeler arasında boşluk */
 }
 
 .navbar .dropdown-menu li a {
   text-decoration: none;
   color: #333;
+  padding: 5px 15px;
+  display: block; /* Tüm genişliği kaplasın */
 }
+
+.navbar .dropdown-menu li a:hover {
+  background-color: #f0f0f0; /* Hover durumunda arka plan rengi */
+}
+
 
 .navbar .logout-icon {
   cursor: pointer;

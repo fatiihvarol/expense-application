@@ -20,3 +20,12 @@ export const fetchBarChart = async () => {
         throw new Error(error.response ? error.response.data.message : 'Failed to fetch bar chart data');
     }
 };
+
+export const fetchBarChartByStatus = async () => {
+    try {
+        const response = await axios.get(`${BASEREPORTURL}/ByStatus`);
+        return response.data;
+    } catch (error) {
+        throw new Error(error.response ? error.response.data.message : 'Failed to fetch bar chart data');
+    }
+};

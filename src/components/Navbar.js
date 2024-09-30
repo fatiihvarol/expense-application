@@ -44,10 +44,10 @@ const Navbar = ({ userRole }) => {
                 <ul className="dropdown-menu">
                   <li><a href="/pie-chart">Pie Chart</a></li>
                   <li><a href="/bar-chart">Bar Chart</a></li>
+                  <li><a href="/bar-chart-status">Status Bar Chart</a></li>
                 </ul>
               )}
             </li>
-            <li><a href="/site-settings">Site Settings</a></li>
           </>
         );
       default:

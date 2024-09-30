@@ -1,31 +1,31 @@
 import React, { useEffect, useState } from "react";
 import { BarChart } from "@mui/x-charts/BarChart";
 import { axisClasses } from "@mui/x-charts/ChartsAxis";
-import { fetchBarChart } from "../../services/ReportService"; // API function to fetch chart data
+import { fetchBarChartByStatus } from "../../services/ReportService"; // API function to fetch chart data
 import { jwtDecode } from "jwt-decode";
 import { TOKENROLEPATH, USERROLE } from "../../config/Constants";
 import Navbar from "../../components/Navbar";
-import "../../styles/Report/Chart.css"; // Import the CSS for styling
 import ProtectedRoute from "../../components/ProtectedRoute";
 
-const BarChartReport = () => {
+const BarChartByStatus = () => {
   const [dataset, setDataset] = useState([]);
   const [currencies, setCurrencies] = useState([]);
 
   useEffect(() => {
     // Fetch bar chart data from the backend
-    fetchBarChart()
+    fetchBarChartByStatus()
       .then((data) => {
         // Transform the data for BarChart
         const transformedData = data.result.map((item) => ({
-          category: item.categoryName,
-          ...item.amountsByCurrency, // Spread dynamic currency values
+          status: item.status,
+          ...item.amountsByCurrency, // Spread dynamic currency values for the first chart
+          count: item.count, // For the second chart
         }));
 
-        // Set dataset and extract unique currencies for series
+        // Set dataset and extract unique currencies for the first chart
         setDataset(transformedData);
 
-        // Get all unique currencies from the dataset
+        // Get all unique currencies from the dataset for the first chart
         const uniqueCurrencies = Array.from(
           new Set(
             data.result.flatMap((item) => Object.keys(item.amountsByCurrency))
@@ -54,17 +54,33 @@ const BarChartReport = () => {
     },
   };
 
+  const countChartSetting = {
+    yAxis: [
+      {
+        label: "Count",
+      },
+    ],
+    width: 600,
+    height: 400,
+    sx: {
+      [`.${axisClasses.left} .${axisClasses.label}`]: {
+        transform: "translate(-20px, 0)",
+      },
+    },
+  };
+
   return (
     <div className="bar-chart-report">
       <Navbar
         userRole={jwtDecode(localStorage.getItem("token"))[TOKENROLEPATH]}
       />
       <div className="chart-container">
-        <div className="title">BAR CHART REPORT</div>
+        <div className="title">Bar Chart - Amounts by Currency</div>
+        {/* First BarChart: Amounts by Currency */}
         <div className="chart-wrapper">
           <BarChart
             dataset={dataset}
-            xAxis={[{ scaleType: "band", dataKey: "category" }]}
+            xAxis={[{ scaleType: "band", dataKey: "status" }]} // Status for x-axis
             series={currencies.map((currency) => ({
               dataKey: currency,
               label: currency.toUpperCase(), // Capitalize currency codes
@@ -72,32 +88,33 @@ const BarChartReport = () => {
             {...chartSetting}
           />
         </div>
+      </div>
 
-        {/* Display expenses below the chart */}
-        <div className="expenses-list">
-          <div className="title">TOTAL EXPENSES BY CATEGORY</div>
-          {dataset.map((item, index) => (
-            <div key={index} className="expense-item">
-              <span className="category-name">{item.category}:</span>
-              {currencies.map(
-                (currency) =>
-                  item[currency] > 0 && (
-                    <span key={currency} className="currency-value">
-                      {currency.toUpperCase()}: {item[currency] || 0}
-                    </span>
-                  )
-              )}
-            </div>
-          ))}
+      <div className="chart-container">
+        <div className="title">Bar Chart - Transaction Counts</div>
+        {/* Second BarChart: Transaction Counts */}
+        <div className="chart-wrapper">
+          <BarChart
+            dataset={dataset}
+            xAxis={[{ scaleType: "band", dataKey: "status" }]} // Status for x-axis
+            series={[
+              {
+                dataKey: "count",
+                label: "Transaction Count",
+              },
+            ]}
+            {...countChartSetting}
+          />
         </div>
       </div>
     </div>
   );
 };
+
 export default () => (
   <ProtectedRoute
-    allowedRoles={USERROLE[3]}
+    allowedRoles={[USERROLE[0], USERROLE[1], USERROLE[2], USERROLE[3]]}
   >
-    <BarChartReport />
+    <BarChartByStatus />
   </ProtectedRoute>
 );
