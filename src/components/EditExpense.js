@@ -146,6 +146,9 @@ const EditExpense = () => {
       if (!exp.receiptNumber.trim()) {
         return alert(`Expense ${i + 1}: Receipt number cannot be empty.`);
       }
+      if ( !exp.amount) {
+        return alert(`Expense ${i + 1}: Amount can not be empty`);
+      }
       if (exp.amount <= 0) {
         return alert(`Expense ${i + 1}: Amount must be greater than 0.`);
       }
@@ -154,7 +157,7 @@ const EditExpense = () => {
       }
     }
   
-    // Update işlemi burada devam eder...
+
     try {
       const dataToUpdate = {
         totalAmount: calculateTotalAmount(),

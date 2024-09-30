@@ -60,6 +60,10 @@
     color: red;
     font-weight: bold;
   }
+  .status-deleted {
+    color: red;
+    font-weight: bold;
+  }
   
   .status-approved {
     color: blue;
