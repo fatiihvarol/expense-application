@@ -6,10 +6,12 @@ import { jwtDecode } from "jwt-decode";
 import { TOKENROLEPATH, USERROLE } from "../../config/Constants";
 import Navbar from "../../components/Navbar";
 import ProtectedRoute from "../../components/ProtectedRoute";
+import { Box, CircularProgress } from "@mui/material";
 
 const BarChartByStatus = () => {
   const [dataset, setDataset] = useState([]);
   const [currencies, setCurrencies] = useState([]);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     // Fetch bar chart data from the backend
@@ -33,6 +35,7 @@ const BarChartByStatus = () => {
         );
 
         setCurrencies(uniqueCurrencies);
+        setLoading(false);
       })
       .catch((error) => {
         console.error("Error fetching bar chart data:", error);
@@ -68,7 +71,13 @@ const BarChartByStatus = () => {
       },
     },
   };
-
+  if (loading) {
+    return (
+      <Box className="centered">
+        <CircularProgress />
+      </Box>
+    );
+  }
   return (
     <div className="bar-chart-report">
       <Navbar
@@ -113,7 +122,7 @@ const BarChartByStatus = () => {
 
 export default () => (
   <ProtectedRoute
-    allowedRoles={[USERROLE[0], USERROLE[1], USERROLE[2], USERROLE[3]]}
+    allowedRoles={ USERROLE[3]}
   >
     <BarChartByStatus />
   </ProtectedRoute>

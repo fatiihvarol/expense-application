@@ -7,10 +7,13 @@ import { TOKENROLEPATH, USERROLE } from "../../config/Constants";
 import Navbar from "../../components/Navbar";
 import "../../styles/Report/Chart.css"; // Import the CSS for styling
 import ProtectedRoute from "../../components/ProtectedRoute";
+import { Box, CircularProgress } from "@mui/material";
 
 const BarChartReport = () => {
   const [dataset, setDataset] = useState([]);
   const [currencies, setCurrencies] = useState([]);
+  const [loading, setLoading] = useState(true);
+
 
   useEffect(() => {
     // Fetch bar chart data from the backend
@@ -31,7 +34,7 @@ const BarChartReport = () => {
             data.result.flatMap((item) => Object.keys(item.amountsByCurrency))
           )
         );
-
+        setLoading(false);
         setCurrencies(uniqueCurrencies);
       })
       .catch((error) => {
@@ -53,7 +56,13 @@ const BarChartReport = () => {
       },
     },
   };
-
+  if (loading) {
+    return (
+      <Box className="centered">
+        <CircularProgress />
+      </Box>
+    );
+  }
   return (
     <div className="bar-chart-report">
       <Navbar

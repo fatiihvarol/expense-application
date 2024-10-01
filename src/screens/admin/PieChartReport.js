@@ -6,9 +6,12 @@ import { fetchPieChart } from "../../services/ReportService";
 import { TOKENROLEPATH, USERROLE } from "../../config/Constants";
 import "../../styles/Report/Chart.css"; // CSS dosyasını dahil ediyoruz
 import ProtectedRoute from "../../components/ProtectedRoute";
+import { Box, CircularProgress } from "@mui/material";
 
 const  PieChartReport =()=> {
   const [data, setData] = useState([]);
+  const [loading, setLoading] = useState(true);
+
 
   // Veri çekme işlemi useEffect içinde
   useEffect(() => {
@@ -23,6 +26,7 @@ const  PieChartReport =()=> {
             label: item.categoryName,
           }));
           setData(chartData);
+          setLoading(false);
         }
       } catch (error) {
         console.error("Failed to fetch pie chart data:", error);
@@ -31,7 +35,13 @@ const  PieChartReport =()=> {
 
     fetchData();
   }, []); // Sayfa yüklendiğinde veri çekme işlemi yapılacak
-
+  if (loading) {
+    return (
+      <Box className="centered">
+        <CircularProgress />
+      </Box>
+    );
+  }
   return (
     <div>
       <Navbar

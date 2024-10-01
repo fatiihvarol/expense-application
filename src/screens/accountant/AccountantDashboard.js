@@ -1,13 +1,13 @@
-import React from 'react';
-import Navbar from '../../components/Navbar';
-import { TOKENROLEPATH } from '../../config/Constants';
-import { jwtDecode } from 'jwt-decode';
-import ExpenseList from '../../components/ExpenseList';
+import React from "react";
+import { USERROLE } from "../../config/Constants";
+import ExpenseList from "../../components/ExpenseList";
+import ProtectedRoute from "../../components/ProtectedRoute";
 const AccountantDashboard = () => {
-    
-    return (
-        <ExpenseList/>
-    );
+  return <ExpenseList />;
 };
 
-export default AccountantDashboard;
+export default () => (
+    <ProtectedRoute allowedRoles={[USERROLE[2]]}>
+      <AccountantDashboard />
+    </ProtectedRoute>
+  );

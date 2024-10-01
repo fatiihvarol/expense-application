@@ -16,7 +16,6 @@ import minusIcon from "../assest/minus.png";
 import { Box, CircularProgress } from "@mui/material";
 import ProtectedRoute from "./ProtectedRoute";
 import { jwtDecode } from "jwt-decode";
-import Rejection from "./Rejection";
 
 const CATEGORYURL = "https://localhost:7295/api/ExpenseCategories";
 
