@@ -43,11 +43,7 @@ const BarChartReport = () => {
   }, []);
 
   const chartSetting = {
-    yAxis: [
-      {
-        label: "Amount",
-      },
-    ],
+   
     width: 600,
     height: 400,
     sx: {

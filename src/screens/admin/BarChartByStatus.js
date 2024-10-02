@@ -43,11 +43,7 @@ const BarChartByStatus = () => {
   }, []);
 
   const chartSetting = {
-    yAxis: [
-      {
-        label: "Amount",
-      },
-    ],
+
     width: 600,
     height: 400,
     sx: {
@@ -58,12 +54,8 @@ const BarChartByStatus = () => {
   };
 
   const countChartSetting = {
-    yAxis: [
-      {
-        label: "Count",
-      },
-    ],
-    width: 600,
+  
+    width: 500,
     height: 400,
     sx: {
       [`.${axisClasses.left} .${axisClasses.label}`]: {
@@ -84,7 +76,7 @@ const BarChartByStatus = () => {
         userRole={jwtDecode(localStorage.getItem("token"))[TOKENROLEPATH]}
       />
       <div className="chart-container">
-        <div className="title">Bar Chart - Amounts by Currency</div>
+        <div className="title">Total Amounts by Status</div>
         {/* First BarChart: Amounts by Currency */}
         <div className="chart-wrapper">
           <BarChart
@@ -100,7 +92,7 @@ const BarChartByStatus = () => {
       </div>
 
       <div className="chart-container">
-        <div className="title">Bar Chart - Transaction Counts</div>
+        <div className="title">Transaction Counts</div>
         {/* Second BarChart: Transaction Counts */}
         <div className="chart-wrapper">
           <BarChart
