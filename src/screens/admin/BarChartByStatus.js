@@ -92,7 +92,7 @@ const BarChartByStatus = () => {
       </div>
 
       <div className="chart-container">
-        <div className="title">Transaction Counts</div>
+        <div className="title">Total Expense Counts By Status</div>
         {/* Second BarChart: Transaction Counts */}
         <div className="chart-wrapper">
           <BarChart

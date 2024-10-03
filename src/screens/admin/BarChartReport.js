@@ -65,7 +65,7 @@ const BarChartReport = () => {
         userRole={jwtDecode(localStorage.getItem("token"))[TOKENROLEPATH]}
       />
       <div className="chart-container">
-        <div className="title">BAR CHART REPORT</div>
+        <div className="title">Total Expenses Amount By Category</div>
         <div className="chart-wrapper">
           <BarChart
             dataset={dataset}
@@ -80,7 +80,6 @@ const BarChartReport = () => {
 
         {/* Display expenses below the chart */}
         <div className="expenses-list">
-          <div className="title">TOTAL EXPENSES BY CATEGORY</div>
           {dataset.map((item, index) => (
             <div key={index} className="expense-item">
               <span className="category-name">{item.category}:</span>

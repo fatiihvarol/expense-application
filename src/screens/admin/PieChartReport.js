@@ -48,7 +48,7 @@ const  PieChartReport =()=> {
         userRole={jwtDecode(localStorage.getItem("token"))[TOKENROLEPATH]}
       />
       <div className="chart-container">
-        <div className="title">PIE CHART</div>
+        <div className="title">Total Expense Counts By Category</div>
         {/* PieChart bileşeni dinamik veriyi kullanıyor */}
         <div className="chart-wrapper">
           <PieChart
