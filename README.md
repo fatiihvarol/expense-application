@@ -103,12 +103,18 @@ Before running this project, ensure you have the following installed:
 - **GET** `/api/Reports/PieChart`: Retrieve a pie chart report of expenses.
 - **GET** `/api/Reports/BarChart`: Retrieve a bar chart report of expenses.
 - **GET** `/api/Reports/ByStatus`: Retrieve a report of expenses by status.
+
+
+##
+
 Endpoints-1
 ![Alt text](https://github.com/user-attachments/assets/d47a77f4-57fa-4a44-9f2b-1391ef57aaf9)
 
-
+##
 Endpoints-2
 ![Alt text](https://github.com/user-attachments/assets/2da7c1ed-bfb0-4c48-a885-453cce83ef29)
+
+##
 
 ## User Roles and Permissions
 
